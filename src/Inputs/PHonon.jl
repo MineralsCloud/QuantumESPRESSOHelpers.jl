@@ -3,9 +3,9 @@ module PHonon
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using QuantumESPRESSO.Namelists.PHonon:
+using QuantumESPRESSOBase.Namelists.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist
-using QuantumESPRESSO.Inputs.PHonon: PhInput, Q2rInput, MatdynInput, DynmatInput
+using QuantumESPRESSOBase.Inputs.PHonon: PhInput, Q2rInput, MatdynInput, DynmatInput
 
 using ...Namelists: namelist_helper
 using ..Inputs

@@ -3,11 +3,11 @@ module PWscf
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using QuantumESPRESSO: asfieldname
-using QuantumESPRESSO.Namelists.PWscf:
+using QuantumESPRESSOBase: asfieldname
+using QuantumESPRESSOBase.Namelists.PWscf:
     ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
-using QuantumESPRESSO.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicPosition, AtomicPositionsCard, KPointsCard, CellParametersCard
-using QuantumESPRESSO.Inputs.PWscf: PWInput
+using QuantumESPRESSOBase.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicPosition, AtomicPositionsCard, KPointsCard, CellParametersCard
+using QuantumESPRESSOBase.Inputs.PWscf: PWInput
 
 using ...Namelists: namelist_helper
 using ...Cards: card_helper

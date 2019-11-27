@@ -3,8 +3,8 @@ module Namelists
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using QuantumESPRESSO: to_qe
-using QuantumESPRESSO.Namelists: Namelist
+using QuantumESPRESSOBase: to_qe
+using QuantumESPRESSOBase.Namelists: Namelist
 using Setfield: PropertyLens, set
 
 using ..Wizard: color_string, @c_str

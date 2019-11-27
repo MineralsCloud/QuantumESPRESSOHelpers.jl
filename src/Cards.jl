@@ -9,7 +9,7 @@ module PWscf
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using QuantumESPRESSO.Cards.PWscf: GammaPoint, MonkhorstPackGrid, KPointsCard
+using QuantumESPRESSOBase.Cards.PWscf: GammaPoint, MonkhorstPackGrid, KPointsCard
 
 using ...Wizard: @c_str
 using ..Cards
