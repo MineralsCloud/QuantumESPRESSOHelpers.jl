@@ -3,6 +3,7 @@ module PWscf
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
+using Crayons.Box: RED_FG
 using QuantumESPRESSOBase: asfieldname
 using QuantumESPRESSOBase.Namelists.PWscf:
     ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
@@ -11,7 +12,6 @@ using QuantumESPRESSOBase.Inputs.PWscf: PWInput
 
 using ...Namelists: namelist_helper
 using ...Cards: card_helper
-using ...Wizard: @c_str
 using ..Inputs
 
 function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
@@ -24,7 +24,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, c"Something wrong happens, try again!"g)
+                println(terminal, RED_FG("Something wrong happens, try again!"))
             end
         end
     end
@@ -36,7 +36,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, c"Something wrong happens, try again!"g)
+                println(terminal, RED_FG("Something wrong happens, try again!"))
             end
         end
     else
@@ -50,7 +50,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, c"Something wrong happens, try again!"g)
+                println(terminal, RED_FG("Something wrong happens, try again!"))
             end
         end
     else
@@ -63,7 +63,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
-            println(terminal, c"Something wrong happens, try again!"g)
+            println(terminal, RED_FG("Something wrong happens, try again!"))
         end
     end
     push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))

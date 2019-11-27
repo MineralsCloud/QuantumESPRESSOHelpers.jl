@@ -3,10 +3,10 @@ module PWscf
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
+using Crayons.Box: GREEN_FG
 using QuantumESPRESSOBase.Namelists.PWscf:
     ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
 
-using ...Wizard: @c_str
 using ..Namelists
 
 function Namelists.namelist_helper(
@@ -17,17 +17,17 @@ function Namelists.namelist_helper(
     restart_modes = pairs(("from_scratch", "restart"))
     calculation = calculations[request(
         terminal,
-        c"What exact calculation do you want to run?"r,
+        GREEN_FG("What exact calculation do you want to run?"),
         RadioMenu(collect(values(calculations))),
     )]
     restart_mode = restart_modes[request(
         terminal,
-        c"Starting from scratch?"r,
+        GREEN_FG("Starting from scratch?"),
         RadioMenu(["yes", "no"]),
     )]
-    print(terminal, c"Convergence threshold on total energy (a.u): "r)
+    print(terminal, GREEN_FG("Convergence threshold on total energy (a.u): "))
     etot_conv_thr = parse(Float64, readline(terminal))
-    print(terminal, c"Convergence threshold on forces (a.u): "r)
+    print(terminal, GREEN_FG("Convergence threshold on forces (a.u): "))
     forc_conv_thr = parse(Float64, readline(terminal))
     control = T(
         calculation = calculation,
@@ -41,22 +41,22 @@ function Namelists.namelist_helper(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:SystemNamelist}
-    print(terminal, c"Please input the Bravais lattice index `ibrav`: "r)
+    print(terminal, GREEN_FG("Please input the Bravais lattice index `ibrav`: "))
     ibrav = parse(Int, readline(terminal))
-    print(terminal, c"Please input a `celldm` 1-6 (separated by spaces): "r)
+    print(terminal, GREEN_FG("Please input a `celldm` 1-6 (separated by spaces): "))
     celldm = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
-    print(terminal, c"Please input the number of atoms in the unit cell `nat`: "r)
+    print(terminal, GREEN_FG("Please input the number of atoms in the unit cell `nat`: "))
     nat = parse(Int, readline(terminal))
-    print(terminal, c"Please input the number of types of atoms in the unit cell `ntyp`: "r)
+    print(terminal, GREEN_FG("Please input the number of types of atoms in the unit cell `ntyp`: "))
     ntyp = parse(Int, readline(terminal))
     print(
         terminal,
-        c"Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: "r,
+        GREEN_FG("Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: "),
     )
     ecutwfc = parse(Float64, readline(terminal))
     print(
         terminal,
-        c"Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: "r,
+        GREEN_FG("Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: "),
     )
     ecutrho = parse(Float64, readline(terminal))
     system = T(
@@ -75,13 +75,13 @@ function Namelists.namelist_helper(
 ) where {T<:ElectronsNamelist}
     print(
         terminal,
-        c"Please input the convergence threshold for selfconsistency `conv_thr`: "r,
+        GREEN_FG("Please input the convergence threshold for selfconsistency `conv_thr`: "),
     )
     conv_thr = parse(Float64, readline(terminal))
     diagonalizations = pairs(("david", "cg", "cg-serial", "david-serial"))
     diagonalization = diagonalizations[request(
         terminal,
-        c"Please input the diagonalization method `diagonalization`: "r,
+        GREEN_FG("Please input the diagonalization method `diagonalization`: "),
         RadioMenu(collect(values(diagonalizations))),
     )]
     electrons = T(conv_thr = conv_thr, diagonalization = diagonalization)
@@ -92,7 +92,7 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:I
         pairs(("none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"))
     ion_dynamics = ion_dynamics_pool[request(
         terminal,
-        c"Please input the type of ionic dynamics `ion_dynamics`: "r,
+        GREEN_FG("Please input the type of ionic dynamics `ion_dynamics`: "),
         RadioMenu(collect(values(ion_dynamics_pool))),
     )]
     ion_temperature_pool = (
@@ -107,7 +107,7 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:I
     )
     ion_temperature = ion_temperature_pool[request(
         terminal,
-        c"Please input the ions temperature `ion_temperature`: "r,
+        GREEN_FG("Please input the ions temperature `ion_temperature`: "),
         RadioMenu(collect(values(ion_temperature_pool))),
     )]
     ions = T(ion_dynamics = ion_dynamics, ion_temperature = ion_temperature)
@@ -117,22 +117,22 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:C
     cell_dynamics_pool = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
     cell_dynamics = cell_dynamics_pool[request(
         terminal,
-        c"Please input the type of dynamics for the cell `cell_dynamics`: "r,
+        GREEN_FG("Please input the type of dynamics for the cell `cell_dynamics`: "),
         RadioMenu(collect(values(cell_dynamics_pool))),
     )]
     print(
         terminal,
-        c"Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: "r,
+        GREEN_FG("Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: "),
     )
     press = parse(Float64, readline(terminal))
     print(
         terminal,
-        c"Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: "r,
+        GREEN_FG("Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: "),
     )
     wmass = parse(Float64, readline(terminal))
     print(
         terminal,
-        c"Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: "r,
+        GREEN_FG("Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: "),
     )
     press_conv_thr = parse(Float64, readline(terminal))
     cell = T(
