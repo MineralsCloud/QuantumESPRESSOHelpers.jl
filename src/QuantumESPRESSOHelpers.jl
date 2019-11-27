@@ -1,6 +1,6 @@
 module QuantumESPRESSOHelpers
 
-include("Namelists.jl")
+include("Namelists/Namelists.jl")
 include("Cards.jl")
 include("Inputs.jl")
 
