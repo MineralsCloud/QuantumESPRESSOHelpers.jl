@@ -1,5 +1,7 @@
 module QuantumESPRESSOHelpers
 
-greet() = print("Hello World!")
+include("Namelists.jl")
+include("Cards.jl")
+include("Inputs.jl")
 
 end # module
