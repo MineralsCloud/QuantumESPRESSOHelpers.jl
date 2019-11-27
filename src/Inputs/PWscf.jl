@@ -24,7 +24,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, RED_FG("Something wrong happens, try again!"))
+                println(terminal, RED_FG("Something wrong happens, try again!") |> string)
             end
         end
     end
@@ -36,7 +36,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, RED_FG("Something wrong happens, try again!"))
+                println(terminal, RED_FG("Something wrong happens, try again!") |> string)
             end
         end
     else
@@ -50,7 +50,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(terminal, RED_FG("Something wrong happens, try again!"))
+                println(terminal, RED_FG("Something wrong happens, try again!") |> string)
             end
         end
     else
@@ -63,7 +63,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
-            println(terminal, RED_FG("Something wrong happens, try again!"))
+            println(terminal, RED_FG("Something wrong happens, try again!") |> string)
         end
     end
     push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
