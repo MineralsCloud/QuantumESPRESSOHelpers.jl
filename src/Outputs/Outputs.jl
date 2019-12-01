@@ -3,8 +3,10 @@ module Outputs
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using Crayons.Box: GREEN_FG
-using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard
+using Crayons: Crayon
+using Crayons.Box: GREEN_FG, BLUE_FG
+using PrettyTables: Highlighter, pretty_table, ft_printf
+using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParsers.Outputs.PWscf
 
 export PWOutput, output_parser
@@ -33,13 +35,17 @@ function output_parser(
     if calculation ∈ ("relax", "vc-relax")
         choice = request(
             terminal,
-            GREEN_FG("Do you want to parse the final or all atomic coordinates?") |> string,
+            GREEN_FG("Do you want to parse the final or all atomic positions?") |> string,
             RadioMenu(["final", "all"]),
         )
         if choice == "final"
             ap = tryparsefinal(AtomicPositionsCard, str)
+            println(terminal, BLUE_FG("Print the final atomic positions:"))
+            print(terminal, ap.data)
         else
             ap = tryparseall(AtomicPositionsCard, str)
+            println(terminal, BLUE_FG("Print all atomic positions:"))
+            map(x -> print(terminal, x.data), ap)
         end
         if calculation == "vc-relax"
             choice = request(
@@ -48,11 +54,28 @@ function output_parser(
                 RadioMenu(["final", "all"]),
             )
             if choice == "final"
-                cp = tryparsefinal(AtomicPositionsCard, str)
+                cp = tryparsefinal(CellParametersCard, str)
+                println(terminal, BLUE_FG("Print the final cell parameters:"))
+                print(terminal, cp.data)
             else
-                cp = tryparseall(AtomicPositionsCard, str)
+                cp = tryparseall(CellParametersCard, str)
+                println(terminal, BLUE_FG("Print all cell parameters:"))
+                map(x -> print(terminal, x.data), cp)
             end
         end
+    end
+    choice = request(
+        terminal,
+        GREEN_FG("Do you want to parse the energies?") |> string,
+        RadioMenu(["yes", "no"]),
+    )
+    if choice == 1
+        hl_odd = Highlighter(
+            f = (data, i, j) -> (i % 2) == 0,
+            crayon = Crayon(background = :light_blue)
+        )
+        df = parse_electrons_energies(str, :combined)
+        pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
     end
 end # function output_parser
 
