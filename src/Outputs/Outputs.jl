@@ -38,14 +38,14 @@ function output_parser(
             GREEN_FG("Do you want to parse the final or all atomic positions?") |> string,
             RadioMenu(["final", "all"]),
         )
-        if choice == "final"
+        if choice == 1
             ap = tryparsefinal(AtomicPositionsCard, str)
             println(terminal, BLUE_FG("Print the final atomic positions:"))
-            print(terminal, ap.data)
+            display(ap.data)
         else
             ap = tryparseall(AtomicPositionsCard, str)
             println(terminal, BLUE_FG("Print all atomic positions:"))
-            map(x -> print(terminal, x.data), ap)
+            foreach(x -> display(x.data), ap)
         end
         if calculation == "vc-relax"
             choice = request(
@@ -53,14 +53,14 @@ function output_parser(
                 GREEN_FG("Do you want to parse the final or all cell parameters?") |> string,
                 RadioMenu(["final", "all"]),
             )
-            if choice == "final"
+            if choice == 1
                 cp = tryparsefinal(CellParametersCard, str)
                 println(terminal, BLUE_FG("Print the final cell parameters:"))
-                print(terminal, cp.data)
+                println(terminal, cp.data)
             else
                 cp = tryparseall(CellParametersCard, str)
                 println(terminal, BLUE_FG("Print all cell parameters:"))
-                map(x -> print(terminal, x.data), cp)
+                foreach(x -> display(x.data), cp)
             end
         end
     end
@@ -72,7 +72,7 @@ function output_parser(
     if choice == 1
         hl_odd = Highlighter(
             f = (data, i, j) -> (i % 2) == 0,
-            crayon = Crayon(background = :light_blue)
+            crayon = Crayon(background = :blue)
         )
         df = parse_electrons_energies(str, :combined)
         pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
