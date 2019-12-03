@@ -14,7 +14,7 @@ using ...Namelists: namelist_helper
 using ...Cards: card_helper
 using ..Inputs
 
-function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
+function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
     fields = Dict{Symbol,Any}()
     for S in (ControlNamelist, SystemNamelist, ElectronsNamelist)
         haserror = true
@@ -69,6 +69,6 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
     push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
     push!(fields, asfieldname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]))
     return T(; fields...)
-end # function input_helper
+end # function input_builder
 
 end # module PWscf
