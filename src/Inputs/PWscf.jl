@@ -10,17 +10,17 @@ using QuantumESPRESSOBase.Namelists.PWscf:
 using QuantumESPRESSOBase.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicPosition, AtomicPositionsCard, KPointsCard, CellParametersCard
 using QuantumESPRESSOBase.Inputs.PWscf: PWInput
 
-using ...Namelists: namelist_helper
-using ...Cards: card_helper
+using ...Namelists: namelist_builder
+using ...Cards: card_builder
 using ..Inputs
 
-function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
+function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
     fields = Dict{Symbol,Any}()
     for S in (ControlNamelist, SystemNamelist, ElectronsNamelist)
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(S) => namelist_helper(terminal, S))
+                push!(fields, asfieldname(S) => namelist_builder(terminal, S))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -32,7 +32,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(IonsNamelist) => namelist_helper(terminal, IonsNamelist))
+                push!(fields, asfieldname(IonsNamelist) => namelist_builder(terminal, IonsNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -46,7 +46,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(CellNamelist) => namelist_helper(terminal, CellNamelist))
+                push!(fields, asfieldname(CellNamelist) => namelist_builder(terminal, CellNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -59,7 +59,7 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
     haserror = true
     while haserror
         try
-            push!(fields, asfieldname(KPointsCard) => card_helper(terminal, KPointsCard))
+            push!(fields, asfieldname(KPointsCard) => card_builder(terminal, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
@@ -69,6 +69,6 @@ function Inputs.input_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput
     push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
     push!(fields, asfieldname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]))
     return T(; fields...)
-end # function input_helper
+end # function input_builder
 
 end # module PWscf

@@ -9,7 +9,7 @@ using QuantumESPRESSOBase.Namelists.PWscf:
 
 using ..Namelists
 
-function Namelists.namelist_helper(
+function Namelists.namelist_builder(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:ControlNamelist}
@@ -36,8 +36,8 @@ function Namelists.namelist_helper(
         forc_conv_thr = forc_conv_thr,
     )
     return Namelists.setfield_helper(terminal, control)
-end # function namelist_helper
-function Namelists.namelist_helper(
+end # function namelist_builder
+function Namelists.namelist_builder(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:SystemNamelist}
@@ -68,8 +68,8 @@ function Namelists.namelist_helper(
         ecutrho = ecutrho,
     )
     return Namelists.setfield_helper(terminal, system)
-end # function namelist_helper
-function Namelists.namelist_helper(
+end # function namelist_builder
+function Namelists.namelist_builder(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:ElectronsNamelist}
@@ -86,8 +86,8 @@ function Namelists.namelist_helper(
     )]
     electrons = T(conv_thr = conv_thr, diagonalization = diagonalization)
     return Namelists.setfield_helper(terminal, electrons)
-end # function namelist_helper
-function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:IonsNamelist}
+end # function namelist_builder
+function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:IonsNamelist}
     ion_dynamics_pool =
         pairs(("none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"))
     ion_dynamics = ion_dynamics_pool[request(
@@ -112,8 +112,8 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:I
     )]
     ions = T(ion_dynamics = ion_dynamics, ion_temperature = ion_temperature)
     return Namelists.setfield_helper(terminal, ions)
-end # function namelist_helper
-function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:CellNamelist}
+end # function namelist_builder
+function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:CellNamelist}
     cell_dynamics_pool = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
     cell_dynamics = cell_dynamics_pool[request(
         terminal,
@@ -142,6 +142,6 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:C
         press_conv_thr = press_conv_thr,
     )
     return Namelists.setfield_helper(terminal, cell)
-end # function namelist_helper
+end # function namelist_builder
 
 end # module PWscf

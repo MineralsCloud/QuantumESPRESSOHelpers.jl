@@ -8,9 +8,9 @@ using QuantumESPRESSOBase: to_qe
 using QuantumESPRESSOBase.Namelists: Namelist
 using Setfield: PropertyLens, set
 
-export namelist_helper
+export namelist_builder
 
-function namelist_helper end
+function namelist_builder end
 
 # This is a helper function and should not be exported.
 function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
