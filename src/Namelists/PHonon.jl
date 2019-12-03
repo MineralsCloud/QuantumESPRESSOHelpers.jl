@@ -9,7 +9,7 @@ using QuantumESPRESSOBase.Namelists.PHonon:
 
 using ..Namelists
 
-function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:PhNamelist}
+function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PhNamelist}
     print(
         terminal,
         GREEN_FG("Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): ") |> string,
@@ -57,8 +57,8 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:P
         k3 = k3,
     )
     return Namelists.setfield_helper(terminal, ph)
-end # function namelist_helper
-function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
+end # function namelist_builder
+function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
     print(terminal, GREEN_FG("name of input dynamical matrices `fildyn`: ") |> string)
     fildyn = strip(readline(terminal))
     print(terminal, GREEN_FG("name of output force constants `flfrc`: ") |> string)
@@ -71,8 +71,8 @@ function Namelists.namelist_helper(terminal::TTYTerminal, ::Type{T}) where {T<:Q
     )]
     q2r = T(fildyn = fildyn, flfrc = flfrc, zasr = zasr)
     return Namelists.setfield_helper(terminal, q2r)
-end # function namelist_helper
-function Namelists.namelist_helper(
+end # function namelist_builder
+function Namelists.namelist_builder(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:MatdynNamelist}
@@ -141,8 +141,8 @@ function Namelists.namelist_helper(
         nosym = nosym,
     )
     return Namelists.setfield_helper(terminal, matdyn)
-end # function namelist_helper
-function Namelists.namelist_helper(
+end # function namelist_builder
+function Namelists.namelist_builder(
     terminal::TTYTerminal,
     ::Type{T},
 ) where {T<:DynmatNamelist}
@@ -159,6 +159,6 @@ function Namelists.namelist_helper(
     amass = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
     dynmat = T(asr = asr, amass = amass)
     return Namelists.setfield_helper(terminal, dynmat)
-end # function namelist_helper
+end # function namelist_builder
 
 end # module PHonon
