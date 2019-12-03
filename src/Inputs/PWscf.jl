@@ -11,7 +11,7 @@ using QuantumESPRESSOBase.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicP
 using QuantumESPRESSOBase.Inputs.PWscf: PWInput
 
 using ...Namelists: namelist_builder
-using ...Cards: card_helper
+using ...Cards: card_builder
 using ..Inputs
 
 function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
@@ -59,7 +59,7 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
     haserror = true
     while haserror
         try
-            push!(fields, asfieldname(KPointsCard) => card_helper(terminal, KPointsCard))
+            push!(fields, asfieldname(KPointsCard) => card_builder(terminal, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)

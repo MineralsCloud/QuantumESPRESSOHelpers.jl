@@ -1,8 +1,8 @@
 module Cards
 
-export card_helper
+export card_builder
 
-function card_helper end
+function card_builder end
 
 module PWscf
 
@@ -14,7 +14,7 @@ using QuantumESPRESSOBase.Cards.PWscf: GammaPoint, MonkhorstPackGrid, KPointsCar
 
 using ..Cards
 
-function Cards.card_helper(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCard}
+function Cards.card_builder(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCard}
     kpt_style = request(
         terminal,
         GREEN_FG("What k-point style do you want?") |> string,
@@ -29,7 +29,7 @@ function Cards.card_helper(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCa
         offsets = map(x -> parse(Int, x), split(readline(terminal), " ", keepempty = false))
         return KPointsCard("automatic", MonkhorstPackGrid(grid, offsets))
     end
-end # function card_helper
+end # function card_builder
 
 end # module PWscf
 
