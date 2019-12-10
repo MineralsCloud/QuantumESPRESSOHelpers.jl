@@ -64,16 +64,16 @@ function output_parser(
             end
         end
     end
+    hl_odd = Highlighter(
+        f = (data, i, j) -> (i % 2) == 0,
+        crayon = Crayon(background = :blue)
+    )
     choice = request(
         terminal,
         GREEN_FG("Do you want to parse the energies?") |> string,
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
-        hl_odd = Highlighter(
-            f = (data, i, j) -> (i % 2) == 0,
-            crayon = Crayon(background = :blue)
-        )
         df = parse_electrons_energies(str, :combined)
         pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
     end
@@ -83,11 +83,16 @@ function output_parser(
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
-        hl_odd = Highlighter(
-            f = (data, i, j) -> (i % 2) == 0,
-            crayon = Crayon(background = :blue)
-        )
         df = parse_clock(str)
+        pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
+    end
+    choice = request(
+        terminal,
+        GREEN_FG("Do you want to parse the diagonalization info?") |> string,
+        RadioMenu(["yes", "no"]),
+    )
+    if choice == 1
+        df = Outputs.PWscf.parse_diagonalization(str)
         pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
     end
 end # function output_parser
