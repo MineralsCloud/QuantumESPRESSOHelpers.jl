@@ -1,8 +1,8 @@
 module Inputs
 
-export input_helper
+export input_builder
 
-function input_helper end
+function input_builder end
 
 include("PWscf.jl")
 include("PHonon.jl")
