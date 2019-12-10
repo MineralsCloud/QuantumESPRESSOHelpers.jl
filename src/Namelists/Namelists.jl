@@ -31,11 +31,20 @@ function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
                 if hasfield(T, field)
                     print(terminal, GREEN_FG("Type its value: ") |> string)
                     try
-                        nml = set(
-                            nml,
-                            PropertyLens{field}(),
-                            parse(fieldtype(T, field), readline(terminal)),
-                        )
+                        S = fieldtype(T, field)
+                        nml = if S <: AbstractString
+                            set(
+                                nml,
+                                PropertyLens{field}(),
+                                chomp(readline(terminal)),
+                            )
+                        else
+                            set(
+                                nml,
+                                PropertyLens{field}(),
+                                parse(fieldtype(T, field), readline(terminal)),
+                            )
+                        end
                     catch e
                         !isa(e, AssertionError) && rethrow(e)
                         println(terminal, RED_FG("A wrong value is given to! Try a new one!") |> string)
