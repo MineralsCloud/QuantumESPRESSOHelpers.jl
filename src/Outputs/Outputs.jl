@@ -5,6 +5,7 @@ using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons: Crayon
 using Crayons.Box: GREEN_FG, BLUE_FG
+using Parameters: type2dict
 using PrettyTables: Highlighter, pretty_table, ft_printf
 using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParsers.Outputs.PWscf
@@ -68,6 +69,15 @@ function output_parser(
         f = (data, i, j) -> (i % 2) == 0,
         crayon = Crayon(background = :blue)
     )
+    choice = request(
+        terminal,
+        GREEN_FG("Do you want to parse its summary?") |> string,
+        RadioMenu(["yes", "no"]),
+    )
+    if choice == 1
+        preamble = parse(Preamble, str)
+        pretty_table(preamble |> type2dict; highlighters = hl_odd)
+    end
     choice = request(
         terminal,
         GREEN_FG("Do you want to parse the energies?") |> string,
