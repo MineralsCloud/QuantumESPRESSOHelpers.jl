@@ -4,7 +4,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons: Crayon
-using Crayons.Box: GREEN_FG, BLUE_FG
+using Crayons.Box: GREEN_FG, BLUE_FG, RED_FG
 using Parameters: type2dict
 using PrettyTables: Highlighter, pretty_table, ft_printf
 using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard, CellParametersCard
@@ -27,6 +27,11 @@ function output_parser(
         end
     catch
         @warn("File '$path' not found!")
+    end
+    if isjobdone(str)
+        println(terminal, GREEN_FG("The job is done! Ready to parse!"))
+    else
+        println(terminal, RED_FG("The job is not finished, be careful!"))
     end
     calculation = calculations[request(
         terminal,
@@ -62,6 +67,11 @@ function output_parser(
                 cp = tryparseall(CellParametersCard, str)
                 println(terminal, BLUE_FG("Print all cell parameters:"))
                 foreach(x -> display(x.data), cp)
+            end
+            if isrelaxed(str)
+                println(terminal, GREEN_FG("The structure is relaxed!"))
+            else
+                println(terminal, RED_FG("The structure is not well-relaxed!"))
             end
         end
     end
