@@ -3,8 +3,8 @@ module PWscf
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
-using Crayons.Box: RED_FG
-using QuantumESPRESSOBase: asfieldname
+using Crayons.Box: RED_FG, GREEN_FG
+using QuantumESPRESSOBase: asfieldname, to_qe
 using QuantumESPRESSOBase.Namelists.PWscf:
     ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
 using QuantumESPRESSOBase.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicPosition, AtomicPositionsCard, KPointsCard, CellParametersCard
@@ -68,7 +68,17 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
     end
     push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
     push!(fields, asfieldname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]))
-    return T(; fields...)
+    result = T(; fields...)
+    saveresult = pairs((true, false))[request(
+        terminal,
+        GREEN_FG("Do you want to save the generated input to file?") |> string,
+        RadioMenu(["yes", "no"]),
+    )]
+    if saveresult
+        print(terminal, GREEN_FG("Input file name: ") |> string)
+        write(readline(terminal) |> chomp, to_qe(result))
+    end
+    return result
 end # function input_builder
 
 end # module PWscf
