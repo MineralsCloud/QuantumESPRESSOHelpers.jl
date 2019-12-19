@@ -1,15 +1,19 @@
-using Documenter, QuantumESPRESSOHelpers
+using QuantumESPRESSOHelpers
+using Documenter
 
 makedocs(;
     modules=[QuantumESPRESSOHelpers],
-    format=Documenter.HTML(),
+    authors="Qi Zhang <singularitti@outlook.com>",
+    repo="https://github.com/MineralsCloud/QuantumESPRESSOHelpers.jl/blob/{commit}{path}#L{line}",
+    sitename="QuantumESPRESSOHelpers.jl",
+    format=Documenter.HTML(;
+        prettyurls=get(ENV, "CI", "false") == "true",
+        canonical="https://MineralsCloud.github.io/QuantumESPRESSOHelpers.jl",
+        assets=String[],
+    ),
     pages=[
         "Home" => "index.md",
     ],
-    repo="https://github.com/MineralsCloud/QuantumESPRESSOHelpers.jl/blob/{commit}{path}#L{line}",
-    sitename="QuantumESPRESSOHelpers.jl",
-    authors="Qi Zhang <singularitti@outlook.com>",
-    assets=String[],
 )
 
 deploydocs(;
