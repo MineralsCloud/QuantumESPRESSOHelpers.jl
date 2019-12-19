@@ -1,4 +1,8 @@
-# QuantumESPRESSOHelpers.jl
+```@meta
+CurrentModule = QuantumESPRESSOHelpers
+```
+
+# QuantumESPRESSOHelpers
 
 ```@index
 ```
