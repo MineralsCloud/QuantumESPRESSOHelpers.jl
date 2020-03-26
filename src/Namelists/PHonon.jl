@@ -12,7 +12,8 @@ using ..Namelists
 function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PhNamelist}
     print(
         terminal,
-        GREEN_FG("Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): ") |> string,
+        GREEN_FG("Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): ") |>
+        string,
     )
     amass = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
     epsil_pool = pairs((false, true))
@@ -29,17 +30,22 @@ function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:
     )]
     print(
         terminal,
-        GREEN_FG("Please input parameters of the Monkhorst-Pack grid `nq` 1-3 (separated by spaces): ") |> string,
+        GREEN_FG("Please input parameters of the Monkhorst-Pack grid `nq` 1-3 (separated by spaces): ") |>
+        string,
     )
     nq1, nq2, nq3 =
         map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
     print(
         terminal,
-        GREEN_FG("Please input parameters of the Monkhorst-Pack grid `nk` 1-3 (separated by spaces): ") |> string,
+        GREEN_FG("Please input parameters of the Monkhorst-Pack grid `nk` 1-3 (separated by spaces): ") |>
+        string,
     )
     nk1, nk2, nk3 =
         map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
-    print(terminal, GREEN_FG("Please input offset `k` 1-3 (separated by spaces): ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input offset `k` 1-3 (separated by spaces): ") |> string,
+    )
     k1, k2, k3 =
         map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
     ph = T(
@@ -66,7 +72,8 @@ function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:
     zasr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     zasr = zasr_pool[request(
         terminal,
-        GREEN_FG("Please input the type of acoustic sum rules used for the Born effective charges `zasr`: ") |> string,
+        GREEN_FG("Please input the type of acoustic sum rules used for the Born effective charges `zasr`: ") |>
+        string,
         RadioMenu(collect(values(zasr_pool))),
     )]
     q2r = T(fildyn = fildyn, flfrc = flfrc, zasr = zasr)
@@ -82,11 +89,15 @@ function Namelists.namelist_builder(
         GREEN_FG("Please select if calculate phonon density of states `dos`: ") |> string,
         RadioMenu([false, true]),
     )]
-    print(terminal, GREEN_FG("Please input the energy step, in cm^(-1) `deltaE`: ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input the energy step, in cm^(-1) `deltaE`: ") |> string,
+    )
     deltaE = parse(Float64, readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input uniform q-point grid for DOS calculation `nk` 1-3 (separated by spaces): ") |> string,
+        GREEN_FG("Please input uniform q-point grid for DOS calculation `nk` 1-3 (separated by spaces): ") |>
+        string,
     )
     nk1, nk2, nk3 =
         map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
@@ -102,10 +113,15 @@ function Namelists.namelist_builder(
     fildyn = strip(readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input the masses of atoms in the supercell (a.m.u.) `amass` (separated by spaces): ") |> string,
+        GREEN_FG("Please input the masses of atoms in the supercell (a.m.u.) `amass` (separated by spaces): ") |>
+        string,
     )
     amass = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
-    print(terminal, GREEN_FG("Please input the number of atom types in the supercell `ntyp`: ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input the number of atom types in the supercell `ntyp`: ") |>
+        string,
+    )
     ntyp = parse(Int, readline(terminal))
     q_in_band_form_pool = pairs((false, true))
     q_in_band_form = q_in_band_form_pool[request(
@@ -154,7 +170,8 @@ function Namelists.namelist_builder(
     )]
     print(
         terminal,
-        GREEN_FG("Please input mass for each atom type `amass` (separated by spaces): ") |> string,
+        GREEN_FG("Please input mass for each atom type `amass` (separated by spaces): ") |>
+        string,
     )
     amass = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
     dynmat = T(asr = asr, amass = amass)

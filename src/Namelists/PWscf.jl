@@ -43,20 +43,32 @@ function Namelists.namelist_builder(
 ) where {T<:SystemNamelist}
     print(terminal, GREEN_FG("Please input the Bravais lattice index `ibrav`: ") |> string)
     ibrav = parse(Int, readline(terminal))
-    print(terminal, GREEN_FG("Please input a `celldm` 1-6 (separated by spaces): ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input a `celldm` 1-6 (separated by spaces): ") |> string,
+    )
     celldm = map(x -> parse(Float64, x), split(readline(terminal), " ", keepempty = false))
-    print(terminal, GREEN_FG("Please input the number of atoms in the unit cell `nat`: ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input the number of atoms in the unit cell `nat`: ") |> string,
+    )
     nat = parse(Int, readline(terminal))
-    print(terminal, GREEN_FG("Please input the number of types of atoms in the unit cell `ntyp`: ") |> string)
+    print(
+        terminal,
+        GREEN_FG("Please input the number of types of atoms in the unit cell `ntyp`: ") |>
+        string,
+    )
     ntyp = parse(Int, readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: ") |> string,
+        GREEN_FG("Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: ") |>
+        string,
     )
     ecutwfc = parse(Float64, readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: ") |> string,
+        GREEN_FG("Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: ") |>
+        string,
     )
     ecutrho = parse(Float64, readline(terminal))
     system = T(
@@ -75,7 +87,8 @@ function Namelists.namelist_builder(
 ) where {T<:ElectronsNamelist}
     print(
         terminal,
-        GREEN_FG("Please input the convergence threshold for selfconsistency `conv_thr`: ") |> string,
+        GREEN_FG("Please input the convergence threshold for selfconsistency `conv_thr`: ") |>
+        string,
     )
     conv_thr = parse(Float64, readline(terminal))
     diagonalizations = pairs(("david", "cg", "cg-serial", "david-serial"))
@@ -87,7 +100,10 @@ function Namelists.namelist_builder(
     electrons = T(conv_thr = conv_thr, diagonalization = diagonalization)
     return Namelists.setfield_helper(terminal, electrons)
 end # function namelist_builder
-function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:IonsNamelist}
+function Namelists.namelist_builder(
+    terminal::TTYTerminal,
+    ::Type{T},
+) where {T<:IonsNamelist}
     ion_dynamics_pool =
         pairs(("none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"))
     ion_dynamics = ion_dynamics_pool[request(
@@ -113,26 +129,33 @@ function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:
     ions = T(ion_dynamics = ion_dynamics, ion_temperature = ion_temperature)
     return Namelists.setfield_helper(terminal, ions)
 end # function namelist_builder
-function Namelists.namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:CellNamelist}
+function Namelists.namelist_builder(
+    terminal::TTYTerminal,
+    ::Type{T},
+) where {T<:CellNamelist}
     cell_dynamics_pool = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
     cell_dynamics = cell_dynamics_pool[request(
         terminal,
-        GREEN_FG("Please input the type of dynamics for the cell `cell_dynamics`: ") |> string,
+        GREEN_FG("Please input the type of dynamics for the cell `cell_dynamics`: ") |>
+        string,
         RadioMenu(collect(values(cell_dynamics_pool))),
     )]
     print(
         terminal,
-        GREEN_FG("Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: ") |> string,
+        GREEN_FG("Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: ") |>
+        string,
     )
     press = parse(Float64, readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: ") |> string,
+        GREEN_FG("Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: ") |>
+        string,
     )
     wmass = parse(Float64, readline(terminal))
     print(
         terminal,
-        GREEN_FG("Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: ") |> string,
+        GREEN_FG("Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: ") |>
+        string,
     )
     press_conv_thr = parse(Float64, readline(terminal))
     cell = T(

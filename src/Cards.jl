@@ -23,9 +23,17 @@ function Cards.card_builder(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsC
     return if kpt_style == 1
         KPointsCard("gamma", GammaPoint())
     else  # "automatic"
-        print(terminal, GREEN_FG("What 3-element k-point grid do you want (separated by spaces): ") |> string)
+        print(
+            terminal,
+            GREEN_FG("What 3-element k-point grid do you want (separated by spaces): ") |>
+            string,
+        )
         grid = map(x -> parse(Int, x), split(readline(terminal), " ", keepempty = false))
-        print(terminal, GREEN_FG("What 3-element k-point offsets do you want (separated by spaces): ") |> string)
+        print(
+            terminal,
+            GREEN_FG("What 3-element k-point offsets do you want (separated by spaces): ") |>
+            string,
+        )
         offsets = map(x -> parse(Int, x), split(readline(terminal), " ", keepempty = false))
         return KPointsCard("automatic", MonkhorstPackGrid(grid, offsets))
     end

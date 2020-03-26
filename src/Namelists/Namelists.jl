@@ -33,11 +33,7 @@ function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
                     try
                         S = fieldtype(T, field)
                         nml = if S <: AbstractString
-                            set(
-                                nml,
-                                PropertyLens{field}(),
-                                chomp(readline(terminal)),
-                            )
+                            set(nml, PropertyLens{field}(), chomp(readline(terminal)))
                         else
                             set(
                                 nml,
@@ -47,7 +43,10 @@ function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
                         end
                     catch e
                         !isa(e, AssertionError) && rethrow(e)
-                        println(terminal, RED_FG("A wrong value is given to! Try a new one!") |> string)
+                        println(
+                            terminal,
+                            RED_FG("A wrong value is given to! Try a new one!") |> string,
+                        )
                         continue
                     end
                     break
