@@ -7,7 +7,7 @@ using Crayons: Crayon
 using Crayons.Box: GREEN_FG, BLUE_FG, RED_FG
 using Parameters: type2dict
 using PrettyTables: Highlighter, pretty_table, ft_printf
-using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard, CellParametersCard
+using QuantumESPRESSOBase.Inputs.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParsers.Outputs.PWscf
 
 export PWOutput, output_parser

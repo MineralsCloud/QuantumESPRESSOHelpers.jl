@@ -10,7 +10,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: GREEN_FG
-using QuantumESPRESSOBase.Cards.PWscf: GammaPoint, MonkhorstPackGrid, KPointsCard
+using QuantumESPRESSOBase.Inputs.PWscf: GammaPoint, MonkhorstPackGrid, KPointsCard
 
 using ..Cards
 

@@ -4,7 +4,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: GREEN_FG
-using QuantumESPRESSOBase.Namelists.PHonon:
+using QuantumESPRESSOBase.Inputs.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist
 
 using ..Namelists

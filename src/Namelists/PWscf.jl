@@ -4,7 +4,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: GREEN_FG
-using QuantumESPRESSOBase.Namelists.PWscf:
+using QuantumESPRESSOBase.Inputs.PWscf:
     ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
 
 using ..Namelists

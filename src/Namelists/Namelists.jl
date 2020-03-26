@@ -4,8 +4,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
-using QuantumESPRESSOBase: to_qe
-using QuantumESPRESSOBase.Namelists: Namelist
+using QuantumESPRESSOBase.Inputs: Namelist, qestring
 using Setfield: PropertyLens, set
 
 export namelist_builder
@@ -15,11 +14,12 @@ function namelist_builder end
 # This is a helper function and should not be exported.
 function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
     while true
-        print(terminal, BLUE_FG(to_qe(nml)) |> string)
+        print(terminal, BLUE_FG(qestring(nml)) |> string)
         # It will continuously print until the user chooses `"no"`, i.e., he/she is satisfied.
         isdone = pairs((false, true))[request(
             terminal,
-            GREEN_FG("We generate an example `$(nameof(T))`. Want to change/add any field?") |> string,
+            GREEN_FG("We generate an example `$(nameof(T))`. Want to change/add any field?") |>
+            string,
             RadioMenu(["yes", "no"]),
         )]
         if !isdone

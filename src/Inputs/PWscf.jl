@@ -4,11 +4,20 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: RED_FG, GREEN_FG
-using QuantumESPRESSOBase: asfieldname, to_qe
-using QuantumESPRESSOBase.Namelists.PWscf:
-    ControlNamelist, SystemNamelist, ElectronsNamelist, IonsNamelist, CellNamelist
-using QuantumESPRESSOBase.Cards.PWscf: AtomicSpecies, AtomicSpeciesCard, AtomicPosition, AtomicPositionsCard, KPointsCard, CellParametersCard
-using QuantumESPRESSOBase.Inputs.PWscf: PWInput
+using QuantumESPRESSOBase.Inputs: entryname, qestring
+using QuantumESPRESSOBase.Inputs.PWscf:
+    ControlNamelist,
+    SystemNamelist,
+    ElectronsNamelist,
+    IonsNamelist,
+    CellNamelist,
+    AtomicSpecies,
+    AtomicSpeciesCard,
+    AtomicPosition,
+    AtomicPositionsCard,
+    KPointsCard,
+    CellParametersCard,
+    PWInput
 
 using ...Namelists: namelist_builder
 using ...Cards: card_builder
@@ -20,7 +29,7 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(S) => namelist_builder(terminal, S))
+                push!(fields, entryname(S) => namelist_builder(terminal, S))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -32,7 +41,10 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(IonsNamelist) => namelist_builder(terminal, IonsNamelist))
+                push!(
+                    fields,
+                    entryname(IonsNamelist) => namelist_builder(terminal, IonsNamelist),
+                )
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -46,7 +58,10 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
         haserror = true
         while haserror
             try
-                push!(fields, asfieldname(CellNamelist) => namelist_builder(terminal, CellNamelist))
+                push!(
+                    fields,
+                    entryname(CellNamelist) => namelist_builder(terminal, CellNamelist),
+                )
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -59,15 +74,18 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
     haserror = true
     while haserror
         try
-            push!(fields, asfieldname(KPointsCard) => card_builder(terminal, KPointsCard))
+            push!(fields, entryname(KPointsCard) => card_builder(terminal, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
             println(terminal, RED_FG("Something wrong happens, try again!") |> string)
         end
     end
-    push!(fields, asfieldname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
-    push!(fields, asfieldname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]))
+    push!(fields, entryname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
+    push!(
+        fields,
+        entryname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]),
+    )
     result = T(; fields...)
     saveresult = pairs((true, false))[request(
         terminal,
@@ -76,7 +94,7 @@ function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInpu
     )]
     if saveresult
         print(terminal, GREEN_FG("Input file name: ") |> string)
-        write(readline(terminal) |> chomp, to_qe(result))
+        write(readline(terminal) |> chomp, qestring(result))
     end
     return result
 end # function input_builder
