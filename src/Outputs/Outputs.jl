@@ -7,17 +7,14 @@ using Crayons: Crayon
 using Crayons.Box: GREEN_FG, BLUE_FG, RED_FG
 using Parameters: type2dict
 using PrettyTables: Highlighter, pretty_table, ft_printf
-using QuantumESPRESSOBase.Cards.PWscf: AtomicPositionsCard, CellParametersCard
+using QuantumESPRESSOBase.Inputs.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParsers.Outputs.PWscf
 
 export PWOutput, output_parser
 
 struct PWOutput end
 
-function output_parser(
-    terminal::TTYTerminal,
-    ::Type{T},
-) where {T<:PWOutput}
+function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
     calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
     print(terminal, GREEN_FG("Please give the absolute path to your output file: "))
     path = abspath(strip(readline(terminal)))
@@ -56,7 +53,8 @@ function output_parser(
         if calculation == "vc-relax"
             choice = request(
                 terminal,
-                GREEN_FG("Do you want to parse the final or all cell parameters?") |> string,
+                GREEN_FG("Do you want to parse the final or all cell parameters?") |>
+                string,
                 RadioMenu(["final", "all"]),
             )
             if choice == 1
@@ -75,10 +73,8 @@ function output_parser(
             end
         end
     end
-    hl_odd = Highlighter(
-        f = (data, i, j) -> (i % 2) == 0,
-        crayon = Crayon(background = :blue)
-    )
+    hl_odd =
+        Highlighter(f = (data, i, j) -> (i % 2) == 0, crayon = Crayon(background = :blue))
     choice = request(
         terminal,
         GREEN_FG("Do you want to parse its summary?") |> string,
