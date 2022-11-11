@@ -32,13 +32,13 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
     end
     calculation = calculations[request(
         terminal,
-        GREEN_FG("What exact calculation is this output?") |> string,
+        string(GREEN_FG("What exact calculation is this output?")),
         RadioMenu(collect(values(calculations))),
     )]
     if calculation ∈ ("relax", "vc-relax")
         choice = request(
             terminal,
-            GREEN_FG("Do you want to parse the final or all atomic positions?") |> string,
+            string(GREEN_FG("Do you want to parse the final or all atomic positions?")),
             RadioMenu(["final", "all"]),
         )
         if choice == 1
@@ -53,8 +53,7 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         if calculation == "vc-relax"
             choice = request(
                 terminal,
-                GREEN_FG("Do you want to parse the final or all cell parameters?") |>
-                string,
+                string(GREEN_FG("Do you want to parse the final or all cell parameters?")),
                 RadioMenu(["final", "all"]),
             )
             if choice == 1
@@ -73,44 +72,45 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
             end
         end
     end
-    hl_odd =
-        Highlighter(f = (data, i, j) -> (i % 2) == 0, crayon = Crayon(background = :blue))
+    hl_odd = Highlighter(;
+        f=(data, i, j) -> (i % 2) == 0, crayon=Crayon(; background=:blue)
+    )
     choice = request(
         terminal,
-        GREEN_FG("Do you want to parse its summary?") |> string,
+        string(GREEN_FG("Do you want to parse its summary?")),
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
         preamble = parse(Preamble, str)
-        pretty_table(preamble |> type2dict; highlighters = hl_odd)
+        pretty_table(type2dict(preamble); highlighters=hl_odd)
     end
     choice = request(
         terminal,
-        GREEN_FG("Do you want to parse the energies?") |> string,
+        string(GREEN_FG("Do you want to parse the energies?")),
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
         df = parse_electrons_energies(str, :combined)
-        pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
+        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
         terminal,
-        GREEN_FG("Do you want to parse the time used?") |> string,
+        string(GREEN_FG("Do you want to parse the time used?")),
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
         df = parse_clock(str)
-        pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
+        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
         terminal,
-        GREEN_FG("Do you want to parse the diagonalization info?") |> string,
+        string(GREEN_FG("Do you want to parse the diagonalization info?")),
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
         df = Outputs.PWscf.parse_diagonalization(str)
-        pretty_table(df; highlighters = hl_odd, formatter = ft_printf("%10.5f"))
+        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
-end # function output_parser
+end
 
 end
