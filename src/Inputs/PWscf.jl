@@ -22,9 +22,9 @@ using QuantumESPRESSOBase.Inputs.PWscf:
     KPointsCard,
     PWInput
 
-import ..Inputs: namelist_builder, card_builder, input_builder, setfield_helper
+import ..Inputs: build, setfield_helper
 
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:ControlNamelist}
+function build(terminal::TTYTerminal, ::Type{ControlNamelist})
     calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
     restart_modes = pairs(("from_scratch", "restart"))
     calculation = calculations[request(
@@ -47,7 +47,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:ControlNam
     )
     return setfield_helper(terminal, control)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:SystemNamelist}
+function build(terminal::TTYTerminal, ::Type{SystemNamelist})
     print(terminal, string(GREEN_FG("Please input the Bravais lattice index `ibrav`: ")))
     ibrav = parse(Int, readline(terminal))
     print(terminal, string(GREEN_FG("Please input a `celldm` 1-6 (separated by spaces): ")))
@@ -87,7 +87,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:SystemName
     )
     return setfield_helper(terminal, system)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:ElectronsNamelist}
+function build(terminal::TTYTerminal, ::Type{ElectronsNamelist})
     print(
         terminal,
         string(
@@ -106,7 +106,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:ElectronsN
     electrons = T(; conv_thr=conv_thr, diagonalization=diagonalization)
     return setfield_helper(terminal, electrons)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:IonsNamelist}
+function build(terminal::TTYTerminal, ::Type{IonsNamelist})
     ion_dynamics_pool = pairs((
         "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
     ))
@@ -133,7 +133,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:IonsNameli
     ions = T(; ion_dynamics=ion_dynamics, ion_temperature=ion_temperature)
     return setfield_helper(terminal, ions)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:CellNamelist}
+function build(terminal::TTYTerminal, ::Type{CellNamelist})
     cell_dynamics_pool = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
     cell_dynamics = cell_dynamics_pool[request(
         terminal,
@@ -175,7 +175,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:CellNameli
     return setfield_helper(terminal, cell)
 end
 
-function card_builder(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCard}
+function build(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCard}
     kpt_style = request(
         terminal,
         string(GREEN_FG("What k-point style do you want?")),
@@ -204,13 +204,13 @@ function card_builder(terminal::TTYTerminal, ::Type{T}) where {T<:KPointsCard}
     end
 end
 
-function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
+function build(terminal::TTYTerminal, ::Type{PWInput})
     fields = Dict{Symbol,Any}()
     for S in (ControlNamelist, SystemNamelist, ElectronsNamelist)
         haserror = true
         while haserror
             try
-                push!(fields, entryname(S) => namelist_builder(terminal, S))
+                push!(fields, entryname(S) => build(terminal, S))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -222,10 +222,7 @@ function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
         haserror = true
         while haserror
             try
-                push!(
-                    fields,
-                    entryname(IonsNamelist) => namelist_builder(terminal, IonsNamelist),
-                )
+                push!(fields, entryname(IonsNamelist) => build(terminal, IonsNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -239,10 +236,7 @@ function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
         haserror = true
         while haserror
             try
-                push!(
-                    fields,
-                    entryname(CellNamelist) => namelist_builder(terminal, CellNamelist),
-                )
+                push!(fields, entryname(CellNamelist) => build(terminal, CellNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -255,7 +249,7 @@ function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PWInput}
     haserror = true
     while haserror
         try
-            push!(fields, entryname(KPointsCard) => card_builder(terminal, KPointsCard))
+            push!(fields, entryname(KPointsCard) => build(terminal, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)

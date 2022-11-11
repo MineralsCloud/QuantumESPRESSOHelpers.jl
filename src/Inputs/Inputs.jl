@@ -7,13 +7,9 @@ using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
 using QuantumESPRESSOBase.Inputs: Namelist, qestring
 using Setfield: PropertyLens, set
 
-export namelist_builder, card_builder, input_builder
+export build
 
-function namelist_builder end
-
-function card_builder end
-
-function input_builder end
+function build end
 
 # This is a helper function and should not be exported.
 function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
