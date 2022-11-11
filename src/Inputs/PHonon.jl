@@ -9,9 +9,9 @@ using QuantumESPRESSOBase.Inputs.PHonon:
 
 using ..Inputs: setfield_helper
 
-import ..Inputs: namelist_builder, input_builder
+import ..Inputs: build
 
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PhNamelist}
+function build(terminal::TTYTerminal, ::Type{PhNamelist})
     print(
         terminal,
         string(
@@ -73,7 +73,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PhNamelist
     )
     return setfield_helper(terminal, ph)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
+function build(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
     print(terminal, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
     fildyn = strip(readline(terminal))
     print(terminal, string(GREEN_FG("name of output force constants `flfrc`: ")))
@@ -91,7 +91,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelis
     q2r = T(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
     return setfield_helper(terminal, q2r)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynNamelist}
+function build(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynNamelist}
     dos_pool = pairs((false, true))
     dos = dos_pool[request(
         terminal,
@@ -170,7 +170,7 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynName
     )
     return setfield_helper(terminal, matdyn)
 end
-function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:DynmatNamelist}
+function build(terminal::TTYTerminal, ::Type{T}) where {T<:DynmatNamelist}
     asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     asr = asr_pool[request(
         terminal,
@@ -188,17 +188,17 @@ function namelist_builder(terminal::TTYTerminal, ::Type{T}) where {T<:DynmatName
     return setfield_helper(terminal, dynmat)
 end
 
-# function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:PhInput}
-#     ph = namelist_builder(terminal, PhNamelist)
+# function build(terminal::TTYTerminal, ::Type{PhInput})
+#     return build(terminal, PhNamelist)
 # end
-function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rInput}
-    return Q2rInput(namelist_builder(terminal, Q2rNamelist))
+function build(terminal::TTYTerminal, ::Type{Q2rInput})
+    return Q2rInput(build(terminal, Q2rNamelist))
 end
-# function Inputs.input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynInput}
-#     ph = namelist_builder(terminal, MatdynNamelist)
+# function build(terminal::TTYTerminal, ::Type{MatdynInput})
+#     return build(terminal, MatdynNamelist)
 # end
-function input_builder(terminal::TTYTerminal, ::Type{T}) where {T<:DynmatInput}
-    return DynmatInput(namelist_builder(terminal, DynmatNamelist))
+function build(terminal::TTYTerminal, ::Type{DynmatInput})
+    return DynmatInput(build(terminal, DynmatNamelist))
 end
 
 end
