@@ -17,13 +17,13 @@ Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 
 [compat]
 Crayons = "4"
-Crystallography = "0.5, 0.6"
+Crystallography = "0.6"
 Parameters = "0.12"
 PrettyTables = "2"
 Pseudopotentials = "0.8"
 PyFortran90Namelists = "0.1"
-QuantumESPRESSOBase = "0.7"
-QuantumESPRESSOParser = "0.3"
+QuantumESPRESSOBase = "0.12"
+QuantumESPRESSOParser = "0.5"
 Setfield = "1"
 julia = "1"
 
