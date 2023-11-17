@@ -1,5 +1,3 @@
-module Inputs
-
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
@@ -67,5 +65,3 @@ end
 
 include("PWscf.jl")
 include("PHonon.jl")
-
-end

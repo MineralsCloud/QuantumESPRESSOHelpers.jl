@@ -1,5 +1,3 @@
-module Outputs
-
 using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
@@ -111,6 +109,4 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         df = Outputs.PWscf.parse_diagonalization(str)
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
-end
-
 end
