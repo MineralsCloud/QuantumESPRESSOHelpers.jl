@@ -16,15 +16,15 @@ REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 
 [compat]
+Crayons = "4"
+Crystallography = "0.5, 0.6"
+Parameters = "0.12"
+PrettyTables = "2"
+Pseudopotentials = "0.8"
+PyFortran90Namelists = "0.1"
 QuantumESPRESSOBase = "0.7"
 QuantumESPRESSOParser = "0.3"
-Crayons = "4"
-PyFortran90Namelists = "0.1"
-Parameters = "0.12"
 Setfield = "1"
-PrettyTables = "2"
-Crystallography = "0.5"
-Pseudopotentials = "0.8"
 julia = "1"
 
 [extras]
