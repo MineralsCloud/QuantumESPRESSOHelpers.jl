@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 AbInitioSoftwareBase = "df5135bc-470e-46c6-b451-292e27ca5b84"
+Accessors = "7d9f7c33-5ae7-4f3b-8dc6-eff91059b697"
 Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 CrystallographyBase = "93b1d1cd-a8ea-4aa5-adb1-b2407ea0ba8d"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
@@ -15,7 +16,6 @@ QuantumESPRESSOBase = "51b62caa-b28f-11e9-38c2-1f67cb498e05"
 QuantumESPRESSOFormatter = "a4e7ca57-d8d8-4f74-9c0b-0b18081c205e"
 QuantumESPRESSOParser = "a780ab42-b33a-11e9-16c1-a92d75b2a626"
 REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
-Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 
 [compat]
@@ -24,7 +24,6 @@ Parameters = "0.12"
 PrettyTables = "2"
 Pseudopotentials = "0.8"
 PyFortran90Namelists = "0.1"
-Setfield = "1"
 julia = "1"
 
 [extras]
