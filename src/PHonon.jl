@@ -32,18 +32,7 @@ function build(term::IO, ::Type{PhNamelist})
     print(term, @green "Please input offset `k` 1-3 (separated by spaces): ")
     k1, k2, k3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     ph = PhNamelist(;
-        amass=amass,
-        epsil=epsil,
-        q_in_band_form=q_in_band_form,
-        nq1=nq1,
-        nq2=nq2,
-        nq3=nq3,
-        nk1=nk1,
-        nk2=nk2,
-        nk3=nk3,
-        k1=k1,
-        k2=k2,
-        k3=k3,
+        amass, epsil, q_in_band_form, nq1, nq2, nq3, nk1, nk2, nk3, k1, k2, k3
     )
     return help_set(term, ph)
 end
@@ -60,7 +49,7 @@ function build(term::IO, ::Type{Q2rNamelist})
         ),
         RadioMenu(collect(values(zasr_pool))),
     )]
-    q2r = Q2rNamelist(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
+    q2r = Q2rNamelist(; fildyn, flfrc, zasr)
     return help_set(term, q2r)
 end
 function build(term::IO, ::Type{MatdynNamelist})
@@ -109,19 +98,19 @@ function build(term::IO, ::Type{MatdynNamelist})
         YES_NO_MENU,
     )]
     matdyn = MatdynNamelist(;
-        dos=dos,
-        deltaE=deltaE,
-        nk1=nk1,
-        nk2=nk2,
-        nk3=nk3,
-        asr=asr,
-        flfrc=flfrc,
-        fildyn=fildyn,
-        amass=amass,
-        ntyp=ntyp,
-        q_in_band_form=q_in_band_form,
-        q_in_cryst_coord=q_in_cryst_coord,
-        nosym=nosym,
+        dos,
+        deltaE,
+        nk1,
+        nk2,
+        nk3,
+        asr,
+        flfrc,
+        fildyn,
+        amass,
+        ntyp,
+        q_in_band_form,
+        q_in_cryst_coord,
+        nosym,
     )
     return help_set(term, matdyn)
 end
@@ -136,7 +125,7 @@ function build(term::IO, ::Type{DynmatNamelist})
         term, @green "Please input mass for each atom type `amass` (separated by spaces): "
     )
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    dynmat = DynmatNamelist(; asr=asr, amass=amass)
+    dynmat = DynmatNamelist(; asr, amass)
     return help_set(term, dynmat)
 end
 # function build(term::IO, ::Type{PhInput})
