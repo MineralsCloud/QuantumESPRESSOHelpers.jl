@@ -21,13 +21,13 @@ using Term: @green, @red
 
 using ..QuantumESPRESSOHelpers: help_set
 
-const CALCULATIONS = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
-const RESTART_MODES = Base.vect("from_scratch", "restart")
-const DIAGONALIZATIONS = Base.vect("david", "cg", "cg-serial", "david-serial")
-const ION_DYNAMICS_POOL = Base.vect(
+const CALCULATION = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
+const RESTART_MODE = Base.vect("from_scratch", "restart")
+const DIAGONALIZATION = Base.vect("david", "cg", "cg-serial", "david-serial")
+const ION_DYNAMICS = Base.vect(
     "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
 )
-const ION_TEMPERATURES = Base.vect(
+const ION_TEMPERATURE = Base.vect(
     "rescaling",
     "rescale-v",
     "rescale-T",
@@ -37,15 +37,15 @@ const ION_TEMPERATURES = Base.vect(
     "initial",
     "not_controlled",
 )
-const CELL_DYNAMICS_POOL = Base.vect("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w")
+const CELL_DYNAMICS = Base.vect("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w")
 
 function build(term::IO, ::Type{ControlNamelist})
-    calculation = CALCULATIONS[request(
+    calculation = CALCULATION[request(
         term,
         @green("What exact calculation do you want to run?"),
-        RadioMenu(CALCULATIONS; charset=:ascii),
+        RadioMenu(CALCULATION; charset=:ascii),
     )]
-    restart_mode = RESTART_MODES[request(
+    restart_mode = RESTART_MODE[request(
         term, @green("Starting from scratch?"), RadioMenu(["yes", "no"])
     )]
     print(term, @green "Convergence threshold on total energy (a.u): ")
@@ -85,33 +85,33 @@ function build(term::IO, ::Type{ElectronsNamelist})
         @green "Please input the convergence threshold for selfconsistency `conv_thr`: "
     )
     conv_thr = parse(Float64, readline(term))
-    diagonalization = DIAGONALIZATIONS[request(
+    diagonalization = DIAGONALIZATION[request(
         term,
         @green("Please input the diagonalization method `diagonalization`: "),
-        RadioMenu(DIAGONALIZATIONS; charset=:ascii),
+        RadioMenu(DIAGONALIZATION; charset=:ascii),
     )]
     electrons = ElectronsNamelist(; conv_thr, diagonalization)
     return help_set(term, electrons)
 end
 function build(term::IO, ::Type{IonsNamelist})
-    ion_dynamics = ION_DYNAMICS_POOL[request(
+    ion_dynamics = ION_DYNAMICS[request(
         term,
         @green("Please input the type of ionic dynamics `ion_dynamics`: "),
-        RadioMenu(ION_DYNAMICS_POOL; charset=:ascii),
+        RadioMenu(ION_DYNAMICS; charset=:ascii),
     )]
-    ion_temperature = ION_TEMPERATURES[request(
+    ion_temperature = ION_TEMPERATURE[request(
         term,
         @green("Please input the ions temperature `ion_temperature`: "),
-        RadioMenu(ION_TEMPERATURES; charset=:ascii),
+        RadioMenu(ION_TEMPERATURE; charset=:ascii),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
     return help_set(term, ions)
 end
 function build(term::IO, ::Type{CellNamelist})
-    cell_dynamics = CELL_DYNAMICS_POOL[request(
+    cell_dynamics = CELL_DYNAMICS[request(
         term,
         @green("Please input the type of dynamics for the cell `cell_dynamics`: "),
-        RadioMenu(CELL_DYNAMICS_POOL; charset=:ascii),
+        RadioMenu(CELL_DYNAMICS; charset=:ascii),
     )]
     print(
         term,
