@@ -44,12 +44,7 @@ function build(term::IO, ::Type{ControlNamelist})
     etot_conv_thr = parse(Float64, readline(term))
     print(term, string(GREEN_FG("Convergence threshold on forces (a.u): ")))
     forc_conv_thr = parse(Float64, readline(term))
-    control = ControlNamelist(;
-        calculation=calculation,
-        restart_mode=restart_mode,
-        etot_conv_thr=etot_conv_thr,
-        forc_conv_thr=forc_conv_thr,
-    )
+    control = ControlNamelist(; calculation, restart_mode, etot_conv_thr, forc_conv_thr)
     return setfield_helper(term, control)
 end
 function build(term::IO, ::Type{SystemNamelist})
@@ -86,9 +81,7 @@ function build(term::IO, ::Type{SystemNamelist})
         ),
     )
     ecutrho = parse(Float64, readline(term))
-    system = SystemNamelist(;
-        ibrav=ibrav, celldm=celldm, nat=nat, ntyp=ntyp, ecutwfc=ecutwfc, ecutrho=ecutrho
-    )
+    system = SystemNamelist(; ibrav, celldm, nat, ntyp, ecutwfc, ecutrho)
     return setfield_helper(term, system)
 end
 function build(term::IO, ::Type{ElectronsNamelist})
@@ -106,7 +99,7 @@ function build(term::IO, ::Type{ElectronsNamelist})
         string(GREEN_FG("Please input the diagonalization method `diagonalization`: ")),
         RadioMenu(collect(values(DIAGONALIZATIONS))),
     )]
-    electrons = ElectronsNamelist(; conv_thr=conv_thr, diagonalization=diagonalization)
+    electrons = ElectronsNamelist(; conv_thr, diagonalization)
     return setfield_helper(term, electrons)
 end
 function build(term::IO, ::Type{IonsNamelist})
@@ -130,7 +123,7 @@ function build(term::IO, ::Type{IonsNamelist})
         string(GREEN_FG("Please input the ions temperature `ion_temperature`: ")),
         RadioMenu(collect(values(ion_temperature_pool))),
     )]
-    ions = IonsNamelist(; ion_dynamics=ion_dynamics, ion_temperature=ion_temperature)
+    ions = IonsNamelist(; ion_dynamics, ion_temperature)
     return setfield_helper(term, ions)
 end
 function build(term::IO, ::Type{CellNamelist})
@@ -168,9 +161,7 @@ function build(term::IO, ::Type{CellNamelist})
         ),
     )
     press_conv_thr = parse(Float64, readline(term))
-    cell = CellNamelist(;
-        cell_dynamics=cell_dynamics, press=press, wmass=wmass, press_conv_thr=press_conv_thr
-    )
+    cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
     return setfield_helper(term, cell)
 end
 
