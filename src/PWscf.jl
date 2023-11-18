@@ -20,6 +20,7 @@ using QuantumESPRESSOBase.PWscf:
     MonkhorstPackGrid,
     KPointsCard,
     PWInput
+using REPL.TerminalMenus: RadioMenu, request, terminal
 
 import ..QuantumESPRESSOHelpers: build, setfield_helper
 
@@ -261,5 +262,6 @@ function build(term::IO, ::Type{PWInput})
     end
     return result
 end
+build(T::Type) = build(terminal, T)
 
 end
