@@ -13,7 +13,7 @@ function setfield_helper(term::IO, nml::T) where {T<:Namelist}
     while true
         print(term, @green string(nml))
         # It will continuously print until the user chooses `"no"`, i.e., he/she is satisfied.
-        isdone = pairs((false, true))[request(
+        isdone = Base.vect(false, true)[request(
             term,
             @green("We generate an example `$(nameof(T))`. Want to change/add any field?"),
             RadioMenu(["yes", "no"]),

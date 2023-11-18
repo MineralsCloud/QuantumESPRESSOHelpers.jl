@@ -24,13 +24,13 @@ using Term: @green, @red
 
 import ..QuantumESPRESSOHelpers: build, setfield_helper
 
-const CALCULATIONS = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
-const RESTART_MODES = pairs(("from_scratch", "restart"))
-const DIAGONALIZATIONS = pairs(("david", "cg", "cg-serial", "david-serial"))
-const ION_DYNAMICS_POOL = pairs((
+const CALCULATIONS = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
+const RESTART_MODES = Base.vect("from_scratch", "restart")
+const DIAGONALIZATIONS = Base.vect("david", "cg", "cg-serial", "david-serial")
+const ION_DYNAMICS_POOL = Base.vect(
     "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
-))
-const ION_TEMPERATURES = pairs((
+)
+const ION_TEMPERATURES = Base.vect(
     "rescaling",
     "rescale-v",
     "rescale-T",
@@ -39,8 +39,8 @@ const ION_TEMPERATURES = pairs((
     "andersen",
     "initial",
     "not_controlled",
-))
-const CELL_DYNAMICS_POOL = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
+)
+const CELL_DYNAMICS_POOL = Base.vect("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w")
 
 function build(term::IO, ::Type{ControlNamelist})
     calculation = CALCULATIONS[request(
@@ -211,7 +211,7 @@ function build(term::IO, ::Type{PWInput})
         groupname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]),
     )
     result = PWInput(; fields...)
-    saveresult = pairs((true, false))[request(
+    saveresult = Base.vect(true, false)[request(
         term,
         @green("Do you want to save the generated input to file?"),
         RadioMenu(["yes", "no"]),
