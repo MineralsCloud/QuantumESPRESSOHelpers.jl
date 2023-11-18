@@ -1,6 +1,6 @@
 module QuantumESPRESSOHelpers
 
-include("Inputs.jl")
-include("Outputs.jl")
+include("PWscf/PWscf.jl")
+include("PHonon.jl")
 
 end

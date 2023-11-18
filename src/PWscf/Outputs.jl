@@ -94,7 +94,7 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
-        df = Outputs.PWscf.parse_diagonalization(str)
+        df = parse_diagonalization(str)
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
 end
