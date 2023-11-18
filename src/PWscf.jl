@@ -1,8 +1,7 @@
 module PWscf
 
-using REPL.TerminalMenus: RadioMenu, request
-
 using AbInitioSoftwareBase: groupname
+using CrystallographyBase: MonkhorstPackGrid
 using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
     SystemNamelist,
@@ -15,10 +14,10 @@ using QuantumESPRESSOBase.PWscf:
     AtomicPositionsCard,
     KPointsCard,
     CellParametersCard,
-    GammaPoint,
-    MonkhorstPackGrid,
-    KPointsCard,
+    GammaPointCard,
+    KMeshCard,
     PWInput
+using QuantumESPRESSOFormatter.PWscf
 using REPL.TerminalMenus: RadioMenu, request, terminal
 using Term: @green, @red
 

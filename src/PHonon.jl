@@ -1,10 +1,9 @@
 module PHonon
 
-using REPL.TerminalMenus: RadioMenu, request
-
 using Crayons.Box: GREEN_FG
 using QuantumESPRESSOBase.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist, Q2rInput, DynmatInput
+using REPL.TerminalMenus: RadioMenu, request
 
 using ..QuantumESPRESSOHelpers: setfield_helper
 

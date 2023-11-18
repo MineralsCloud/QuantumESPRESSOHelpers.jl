@@ -1,5 +1,3 @@
-using REPL.TerminalMenus: RadioMenu, request
-
 using Crayons: Crayon
 using Crayons.Box: GREEN_FG, BLUE_FG, RED_FG
 using Parameters: type2dict
