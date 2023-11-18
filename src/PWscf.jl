@@ -23,15 +23,21 @@ using QuantumESPRESSOBase.PWscf:
 
 import ..QuantumESPRESSOHelpers: build, setfield_helper
 
+const CALCULATIONS = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
+const RESTART_MODES = pairs(("from_scratch", "restart"))
+const DIAGONALIZATIONS = pairs(("david", "cg", "cg-serial", "david-serial"))
+const ION_DYNAMICS_POOL = pairs((
+    "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
+))
+const CELL_DYNAMICS_POOL = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
+
 function build(term::IO, ::Type{ControlNamelist})
-    calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
-    restart_modes = pairs(("from_scratch", "restart"))
-    calculation = calculations[request(
+    calculation = CALCULATIONS[request(
         term,
         string(GREEN_FG("What exact calculation do you want to run?")),
-        RadioMenu(collect(values(calculations))),
+        RadioMenu(collect(values(CALCULATIONS))),
     )]
-    restart_mode = restart_modes[request(
+    restart_mode = RESTART_MODES[request(
         term, string(GREEN_FG("Starting from scratch?")), RadioMenu(["yes", "no"])
     )]
     print(term, string(GREEN_FG("Convergence threshold on total energy (a.u): ")))
@@ -95,23 +101,19 @@ function build(term::IO, ::Type{ElectronsNamelist})
         ),
     )
     conv_thr = parse(Float64, readline(term))
-    diagonalizations = pairs(("david", "cg", "cg-serial", "david-serial"))
-    diagonalization = diagonalizations[request(
+    diagonalization = DIAGONALIZATIONS[request(
         term,
         string(GREEN_FG("Please input the diagonalization method `diagonalization`: ")),
-        RadioMenu(collect(values(diagonalizations))),
+        RadioMenu(collect(values(DIAGONALIZATIONS))),
     )]
     electrons = ElectronsNamelist(; conv_thr=conv_thr, diagonalization=diagonalization)
     return setfield_helper(term, electrons)
 end
 function build(term::IO, ::Type{IonsNamelist})
-    ion_dynamics_pool = pairs((
-        "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
-    ))
-    ion_dynamics = ion_dynamics_pool[request(
+    ion_dynamics = ION_DYNAMICS_POOL[request(
         term,
         string(GREEN_FG("Please input the type of ionic dynamics `ion_dynamics`: ")),
-        RadioMenu(collect(values(ion_dynamics_pool))),
+        RadioMenu(collect(values(ION_DYNAMICS_POOL))),
     )]
     ion_temperature_pool = (
         "rescaling",
@@ -132,13 +134,12 @@ function build(term::IO, ::Type{IonsNamelist})
     return setfield_helper(term, ions)
 end
 function build(term::IO, ::Type{CellNamelist})
-    cell_dynamics_pool = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
-    cell_dynamics = cell_dynamics_pool[request(
+    cell_dynamics = CELL_DYNAMICS_POOL[request(
         term,
         string(
             GREEN_FG("Please input the type of dynamics for the cell `cell_dynamics`: ")
         ),
-        RadioMenu(collect(values(cell_dynamics_pool))),
+        RadioMenu(collect(values(CELL_DYNAMICS_POOL))),
     )]
     print(
         term,
