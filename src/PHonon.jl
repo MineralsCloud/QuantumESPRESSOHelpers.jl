@@ -45,7 +45,7 @@ function build(term::IO, ::Type{PhNamelist})
     nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     print(term, string(GREEN_FG("Please input offset `k` 1-3 (separated by spaces): ")))
     k1, k2, k3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    ph = T(;
+    ph = PhNamelist(;
         amass=amass,
         epsil=epsil,
         q_in_band_form=q_in_band_form,
@@ -61,7 +61,7 @@ function build(term::IO, ::Type{PhNamelist})
     )
     return help_set(term, ph)
 end
-function build(term::IO, ::Type{T}) where {T<:Q2rNamelist}
+function build(term::IO, ::Type{Q2rNamelist})
     print(term, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
     fildyn = strip(readline(term))
     print(term, string(GREEN_FG("name of output force constants `flfrc`: ")))
@@ -76,10 +76,10 @@ function build(term::IO, ::Type{T}) where {T<:Q2rNamelist}
         ),
         RadioMenu(collect(values(zasr_pool))),
     )]
-    q2r = T(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
+    q2r = Q2rNamelist(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
     return help_set(term, q2r)
 end
-function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
+function build(term::IO, ::Type{MatdynNamelist})
     dos_pool = pairs((false, true))
     dos = dos_pool[request(
         term,
@@ -139,7 +139,7 @@ function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
         string(GREEN_FG("Please select if impose symmetry and time reversal `nosym`: ")),
         RadioMenu([false, true]),
     )]
-    matdyn = T(;
+    matdyn = MatdynNamelist(;
         dos=dos,
         deltaE=deltaE,
         nk1=nk1,
@@ -156,7 +156,7 @@ function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
     )
     return help_set(term, matdyn)
 end
-function build(term::IO, ::Type{T}) where {T<:DynmatNamelist}
+function build(term::IO, ::Type{DynmatNamelist})
     asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     asr = asr_pool[request(
         term,
@@ -170,10 +170,9 @@ function build(term::IO, ::Type{T}) where {T<:DynmatNamelist}
         ),
     )
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    dynmat = T(; asr=asr, amass=amass)
+    dynmat = DynmatNamelist(; asr=asr, amass=amass)
     return help_set(term, dynmat)
 end
-
 # function build(term::IO, ::Type{PhInput})
 #     return build(term, PhNamelist)
 # end
