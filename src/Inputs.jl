@@ -2,6 +2,7 @@ using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
 using QuantumESPRESSOBase: Namelist
+using REPL.TerminalMenus: RadioMenu, request, terminal
 using Setfield: PropertyLens, set
 
 export build
@@ -61,6 +62,7 @@ function setfield_helper(term::IO, nml::T) where {T<:Namelist}
     end
     return nml
 end
+setfield_helper(nml) = setfield_helper(terminal, nml)
 
 include("PWscf.jl")
 include("PHonon.jl")
