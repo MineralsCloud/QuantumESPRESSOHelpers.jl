@@ -17,7 +17,6 @@ Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 
 [compat]
 Crayons = "4"
-Crystallography = "0.6"
 Parameters = "0.12"
 PrettyTables = "2"
 Pseudopotentials = "0.8"
