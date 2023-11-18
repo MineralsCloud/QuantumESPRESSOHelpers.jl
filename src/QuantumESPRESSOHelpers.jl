@@ -1,6 +1,6 @@
 module QuantumESPRESSOHelpers
 
-include("Inputs/Inputs.jl")
-include("Outputs/Outputs.jl")
+include("Inputs.jl")
+include("Outputs.jl")
 
-end # module
+end 

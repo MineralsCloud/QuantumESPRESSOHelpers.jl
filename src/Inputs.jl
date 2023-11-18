@@ -2,7 +2,7 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
-using QuantumESPRESSOBase.Inputs: Namelist, qestring
+using QuantumESPRESSOBase: Namelist, qestring
 using Setfield: PropertyLens, set
 
 export build
