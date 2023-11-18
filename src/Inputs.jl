@@ -1,6 +1,5 @@
 using AbInitioSoftwareBase: Namelist
 using Accessors: PropertyLens, set
-using Crayons.Box: BLUE_FG
 using REPL.TerminalMenus: RadioMenu, request, terminal
 using Term: @green, @red
 
