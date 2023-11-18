@@ -11,14 +11,13 @@ function build end
 # This is a helper function and should not be exported.
 function help_set(term, nml::Namelist)
     while true
-        println(term, @green string(nml))
         user_response = request(
             term,
-            @green(
-                "the current namelist is `$(nameof(typeof(nml)))`. Want to change/add any field?"
-            ),
+            @green("Want to change/add any field?"),
             RadioMenu(Base.vect("yes", "no"); charset=:ascii),
         )
+        println(term, @green "I'll print the result for you:")
+        println(term, @green string(nml))
         if Bool(only(user_response) - 1)
             break  # Break the loop if user chooses 'no'
         end
