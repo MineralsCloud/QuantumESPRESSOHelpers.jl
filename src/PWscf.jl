@@ -144,12 +144,12 @@ function build(term::IO, ::Type{KPointsCard})
         print(
             term, @green "What 3-element k-point grid do you want (separated by spaces): "
         )
-        grid = map(x -> parse(Int, x), split(readline(term), " "; keepempty=false))
+        grid = map(Base.Fix1(parse, Int), split(readline(term), " "; keepempty=false))
         print(
             term,
             @green "What 3-element k-point offsets do you want (separated by spaces): "
         )
-        offsets = map(x -> parse(Int, x), split(readline(term), " "; keepempty=false))
+        offsets = map(Base.Fix1(parse, Int), split(readline(term), " "; keepempty=false))
         return KMeshCard(MonkhorstPackGrid(grid, offsets))
     end
 end
