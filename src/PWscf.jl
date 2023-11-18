@@ -38,7 +38,7 @@ function build(term::IO, ::Type{ControlNamelist})
     etot_conv_thr = parse(Float64, readline(term))
     print(term, string(GREEN_FG("Convergence threshold on forces (a.u): ")))
     forc_conv_thr = parse(Float64, readline(term))
-    control = T(;
+    control = ControlNamelist(;
         calculation=calculation,
         restart_mode=restart_mode,
         etot_conv_thr=etot_conv_thr,
@@ -80,7 +80,7 @@ function build(term::IO, ::Type{SystemNamelist})
         ),
     )
     ecutrho = parse(Float64, readline(term))
-    system = T(;
+    system = SystemNamelist(;
         ibrav=ibrav, celldm=celldm, nat=nat, ntyp=ntyp, ecutwfc=ecutwfc, ecutrho=ecutrho
     )
     return setfield_helper(term, system)
@@ -101,7 +101,7 @@ function build(term::IO, ::Type{ElectronsNamelist})
         string(GREEN_FG("Please input the diagonalization method `diagonalization`: ")),
         RadioMenu(collect(values(diagonalizations))),
     )]
-    electrons = T(; conv_thr=conv_thr, diagonalization=diagonalization)
+    electrons = ElectronsNamelist(; conv_thr=conv_thr, diagonalization=diagonalization)
     return setfield_helper(term, electrons)
 end
 function build(term::IO, ::Type{IonsNamelist})
@@ -128,7 +128,7 @@ function build(term::IO, ::Type{IonsNamelist})
         string(GREEN_FG("Please input the ions temperature `ion_temperature`: ")),
         RadioMenu(collect(values(ion_temperature_pool))),
     )]
-    ions = T(; ion_dynamics=ion_dynamics, ion_temperature=ion_temperature)
+    ions = IonsNamelist(; ion_dynamics=ion_dynamics, ion_temperature=ion_temperature)
     return setfield_helper(term, ions)
 end
 function build(term::IO, ::Type{CellNamelist})
@@ -167,7 +167,7 @@ function build(term::IO, ::Type{CellNamelist})
         ),
     )
     press_conv_thr = parse(Float64, readline(term))
-    cell = T(;
+    cell = CellNamelist(;
         cell_dynamics=cell_dynamics, press=press, wmass=wmass, press_conv_thr=press_conv_thr
     )
     return setfield_helper(term, cell)
@@ -259,7 +259,7 @@ function build(term::IO, ::Type{PWInput})
         fields,
         groupname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]),
     )
-    result = T(; fields...)
+    result = PWInput(; fields...)
     saveresult = pairs((true, false))[request(
         term,
         string(GREEN_FG("Do you want to save the generated input to file?")),
