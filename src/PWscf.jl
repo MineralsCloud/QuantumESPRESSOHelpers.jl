@@ -2,7 +2,6 @@ module PWscf
 
 using REPL.TerminalMenus: RadioMenu, request
 
-using Crayons.Box: RED_FG, GREEN_FG
 using AbInitioSoftwareBase: groupname
 using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
@@ -21,6 +20,7 @@ using QuantumESPRESSOBase.PWscf:
     KPointsCard,
     PWInput
 using REPL.TerminalMenus: RadioMenu, request, terminal
+using Term: @green, @red
 
 import ..QuantumESPRESSOHelpers: build, setfield_helper
 
@@ -45,51 +45,38 @@ const CELL_DYNAMICS_POOL = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr
 function build(term::IO, ::Type{ControlNamelist})
     calculation = CALCULATIONS[request(
         term,
-        string(GREEN_FG("What exact calculation do you want to run?")),
+        @green("What exact calculation do you want to run?"),
         RadioMenu(collect(values(CALCULATIONS))),
     )]
     restart_mode = RESTART_MODES[request(
-        term, string(GREEN_FG("Starting from scratch?")), RadioMenu(["yes", "no"])
+        term, @green("Starting from scratch?"), RadioMenu(["yes", "no"])
     )]
-    print(term, string(GREEN_FG("Convergence threshold on total energy (a.u): ")))
+    print(term, @green "Convergence threshold on total energy (a.u): ")
     etot_conv_thr = parse(Float64, readline(term))
-    print(term, string(GREEN_FG("Convergence threshold on forces (a.u): ")))
+    print(term, @green "Convergence threshold on forces (a.u): ")
     forc_conv_thr = parse(Float64, readline(term))
     control = ControlNamelist(; calculation, restart_mode, etot_conv_thr, forc_conv_thr)
     return setfield_helper(term, control)
 end
 function build(term::IO, ::Type{SystemNamelist})
-    print(term, string(GREEN_FG("Please input the Bravais lattice index `ibrav`: ")))
+    print(term, @green "Please input the Bravais lattice index `ibrav`: ")
     ibrav = parse(Int, readline(term))
-    print(term, string(GREEN_FG("Please input a `celldm` 1-6 (separated by spaces): ")))
-    celldm = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    print(
-        term, string(GREEN_FG("Please input the number of atoms in the unit cell `nat`: "))
-    )
+    print(term, @green "Please input a `celldm` 1-6 (separated by spaces): ")
+    celldm = map(Base.Fix1(parse, Float64), split(readline(term), " "; keepempty=false))
+    print(term, @green "Please input the number of atoms in the unit cell `nat`: ")
     nat = parse(Int, readline(term))
     print(
-        term,
-        string(
-            GREEN_FG("Please input the number of types of atoms in the unit cell `ntyp`: ")
-        ),
+        term, @green "Please input the number of types of atoms in the unit cell `ntyp`: "
     )
     ntyp = parse(Int, readline(term))
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: "
-            ),
-        ),
+        @green "Please input the kinetic energy cutoff (Ry) for wavefunctions `ecutwfc`: "
     )
     ecutwfc = parse(Float64, readline(term))
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: "
-            ),
-        ),
+        @green "Please input the Kinetic energy cutoff (Ry) for charge density `ecutrho`: "
     )
     ecutrho = parse(Float64, readline(term))
     system = SystemNamelist(; ibrav, celldm, nat, ntyp, ecutwfc, ecutrho)
@@ -98,16 +85,12 @@ end
 function build(term::IO, ::Type{ElectronsNamelist})
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the convergence threshold for selfconsistency `conv_thr`: "
-            ),
-        ),
+        @green "Please input the convergence threshold for selfconsistency `conv_thr`: "
     )
     conv_thr = parse(Float64, readline(term))
     diagonalization = DIAGONALIZATIONS[request(
         term,
-        string(GREEN_FG("Please input the diagonalization method `diagonalization`: ")),
+        @green("Please input the diagonalization method `diagonalization`: "),
         RadioMenu(collect(values(DIAGONALIZATIONS))),
     )]
     electrons = ElectronsNamelist(; conv_thr, diagonalization)
@@ -116,12 +99,12 @@ end
 function build(term::IO, ::Type{IonsNamelist})
     ion_dynamics = ION_DYNAMICS_POOL[request(
         term,
-        string(GREEN_FG("Please input the type of ionic dynamics `ion_dynamics`: ")),
+        @green("Please input the type of ionic dynamics `ion_dynamics`: "),
         RadioMenu(collect(values(ION_DYNAMICS_POOL))),
     )]
     ion_temperature = ION_TEMPERATURES[request(
         term,
-        string(GREEN_FG("Please input the ions temperature `ion_temperature`: ")),
+        @green("Please input the ions temperature `ion_temperature`: "),
         RadioMenu(collect(values(ION_TEMPERATURES))),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
@@ -130,36 +113,22 @@ end
 function build(term::IO, ::Type{CellNamelist})
     cell_dynamics = CELL_DYNAMICS_POOL[request(
         term,
-        string(
-            GREEN_FG("Please input the type of dynamics for the cell `cell_dynamics`: ")
-        ),
+        @green("Please input the type of dynamics for the cell `cell_dynamics`: "),
         RadioMenu(collect(values(CELL_DYNAMICS_POOL))),
     )]
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: ",
-            ),
-        ),
+        @green "Please input the target pressure [KBar] in a variable-cell md or relaxation run `press`: "
     )
     press = parse(Float64, readline(term))
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: ",
-            ),
-        ),
+        @green "Please input the fictitious cell mass [amu] for variable-cell simulations `wmass`: "
     )
     wmass = parse(Float64, readline(term))
     print(
         term,
-        string(
-            GREEN_FG(
-                "Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: ",
-            ),
-        ),
+        @green "Please input the Convergence threshold on the pressure for variable cell `press_conv_thr`: "
     )
     press_conv_thr = parse(Float64, readline(term))
     cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
@@ -167,27 +136,18 @@ function build(term::IO, ::Type{CellNamelist})
 end
 function build(term::IO, ::Type{KPointsCard})
     kpt_style = request(
-        term,
-        string(GREEN_FG("What k-point style do you want?")),
-        RadioMenu(["gamma", "automatic"]),
+        term, @green("What k-point style do you want?"), RadioMenu(["gamma", "automatic"])
     )
     return if kpt_style == 1
         GammaPointCard()
     else  # "automatic"
         print(
-            term,
-            string(
-                GREEN_FG("What 3-element k-point grid do you want (separated by spaces): ")
-            ),
+            term, @green "What 3-element k-point grid do you want (separated by spaces): "
         )
         grid = map(x -> parse(Int, x), split(readline(term), " "; keepempty=false))
         print(
             term,
-            string(
-                GREEN_FG(
-                    "What 3-element k-point offsets do you want (separated by spaces): "
-                ),
-            ),
+            @green "What 3-element k-point offsets do you want (separated by spaces): "
         )
         offsets = map(x -> parse(Int, x), split(readline(term), " "; keepempty=false))
         return KMeshCard(MonkhorstPackGrid(grid, offsets))
@@ -203,7 +163,7 @@ function build(term::IO, ::Type{PWInput})
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(term, string(RED_FG("Something wrong happens, try again!")))
+                println(term, @red "Something wrong happens, try again!")
             end
         end
     end
@@ -215,7 +175,7 @@ function build(term::IO, ::Type{PWInput})
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(term, string(RED_FG("Something wrong happens, try again!")))
+                println(term, @red "Something wrong happens, try again!")
             end
         end
     else
@@ -229,7 +189,7 @@ function build(term::IO, ::Type{PWInput})
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
-                println(term, string(RED_FG("Something wrong happens, try again!")))
+                println(term, @red "Something wrong happens, try again!")
             end
         end
     else
@@ -242,7 +202,7 @@ function build(term::IO, ::Type{PWInput})
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
-            println(term, string(RED_FG("Something wrong happens, try again!")))
+            println(term, @red "Something wrong happens, try again!")
         end
     end
     push!(fields, groupname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
@@ -253,11 +213,11 @@ function build(term::IO, ::Type{PWInput})
     result = PWInput(; fields...)
     saveresult = pairs((true, false))[request(
         term,
-        string(GREEN_FG("Do you want to save the generated input to file?")),
+        @green("Do you want to save the generated input to file?"),
         RadioMenu(["yes", "no"]),
     )]
     if saveresult
-        print(term, string(GREEN_FG("Input file name: ")))
+        print(term, @green "Input file name: ")
         write(chomp(readline(term)), result)
     end
     return result
