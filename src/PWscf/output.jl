@@ -9,7 +9,6 @@ export PWOutput, output_parser
 struct PWOutput end
 
 function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
-    calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
     print(term, @green "Please give the absolute path to your output file: ")
     path = abspath(strip(readline(term)))
     str = try
@@ -24,10 +23,10 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
     else
         println(term, @red "The job is not finished, be careful!")
     end
-    calculation = calculations[request(
+    calculation = CALCULATIONS[request(
         term,
         @green("What exact calculation is this output?"),
-        RadioMenu(collect(values(calculations))),
+        RadioMenu(collect(values(CALCULATIONS))),
     )]
     if calculation ∈ ("relax", "vc-relax")
         choice = request(
