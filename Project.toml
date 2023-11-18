@@ -15,6 +15,7 @@ QuantumESPRESSOFormatter = "a4e7ca57-d8d8-4f74-9c0b-0b18081c205e"
 QuantumESPRESSOParser = "a780ab42-b33a-11e9-16c1-a92d75b2a626"
 REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
+Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 
 [compat]
 Crayons = "4"
