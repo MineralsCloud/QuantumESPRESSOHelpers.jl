@@ -4,12 +4,12 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: GREEN_FG
-using QuantumESPRESSOBase.Inputs.PHonon:
+using QuantumESPRESSOBase.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist, Q2rInput, DynmatInput
 
-using ..Inputs: setfield_helper
+using ..QuantumESPRESSOHelpers: setfield_helper
 
-import ..Inputs: build
+import ..QuantumESPRESSOHelpers: build
 
 function build(terminal::TTYTerminal, ::Type{PhNamelist})
     print(

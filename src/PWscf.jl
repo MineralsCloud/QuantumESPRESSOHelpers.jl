@@ -4,8 +4,8 @@ using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: RED_FG, GREEN_FG
-using QuantumESPRESSOBase.Inputs: entryname, qestring
-using QuantumESPRESSOBase.Inputs.PWscf:
+using QuantumESPRESSOBase: entryname, qestring
+using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
     SystemNamelist,
     ElectronsNamelist,
@@ -22,7 +22,7 @@ using QuantumESPRESSOBase.Inputs.PWscf:
     KPointsCard,
     PWInput
 
-import ..Inputs: build, setfield_helper
+import ..QuantumESPRESSOHelpers: build, setfield_helper
 
 function build(terminal::TTYTerminal, ::Type{ControlNamelist})
     calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
