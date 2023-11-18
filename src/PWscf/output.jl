@@ -1,5 +1,4 @@
-using Parameters: type2dict
-using PrettyTables: Highlighter, pretty_table, ft_printf
+using DataFrames: DataFrame
 using QuantumESPRESSOBase.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParser.PWscf:
     Preamble,
@@ -75,27 +74,26 @@ function parse_output(term::IO)
             end
         end
     end
-    hl_odd = Highlighter(; f=(data, i, j) -> (i % 2) == 0)
     choice = request(
         term, @green("Do you want to parse its summary?"), RadioMenu(["yes", "no"])
     )
     if choice == 1
         preamble = parse(Preamble, str)
-        pretty_table(type2dict(preamble); highlighters=hl_odd)
+        println(term, DataFrame(Base.vect(preamble)))
     end
     choice = request(
         term, @green("Do you want to parse the energies?"), RadioMenu(["yes", "no"])
     )
     if choice == 1
-        df = eachconvergedenergy(str)
-        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
+        df = DataFrame(eachconvergedenergy(str))
+        println(term, df)
     end
     choice = request(
         term, @green("Do you want to parse the time used?"), RadioMenu(["yes", "no"])
     )
     if choice == 1
-        df = eachtimeditem(str)
-        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
+        df = DataFrame(eachtimeditem(str))
+        println(term, df)
     end
     choice = request(
         term,
@@ -103,8 +101,8 @@ function parse_output(term::IO)
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
-        df = eachdiagonalization(str)
-        pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
+        df = DataFrame(eachdiagonalization(str))
+        println(term, df)
     end
 end
 parse_output() = parse_output(terminal)
