@@ -53,6 +53,3 @@ function _help_set_iter(term, nml::Namelist)
     end
     return nml
 end
-
-include("PWscf.jl")
-include("PHonon.jl")

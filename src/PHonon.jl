@@ -5,10 +5,6 @@ using QuantumESPRESSOBase.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist, Q2rInput, DynmatInput
 using REPL.TerminalMenus: RadioMenu, request
 
-using ..QuantumESPRESSOHelpers: help_set
-
-import ..QuantumESPRESSOHelpers: build
-
 function build(term::IO, ::Type{PhNamelist})
     print(
         term,
