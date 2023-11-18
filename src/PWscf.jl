@@ -3,7 +3,7 @@ module PWscf
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: RED_FG, GREEN_FG
-using QuantumESPRESSOBase: entryname
+using AbInitioSoftwareBase: groupname
 using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
     SystemNamelist,
@@ -208,7 +208,7 @@ function build(term::IO, ::Type{PWInput})
         haserror = true
         while haserror
             try
-                push!(fields, entryname(S) => build(term, S))
+                push!(fields, groupname(S) => build(term, S))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -220,7 +220,7 @@ function build(term::IO, ::Type{PWInput})
         haserror = true
         while haserror
             try
-                push!(fields, entryname(IonsNamelist) => build(term, IonsNamelist))
+                push!(fields, groupname(IonsNamelist) => build(term, IonsNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -234,7 +234,7 @@ function build(term::IO, ::Type{PWInput})
         haserror = true
         while haserror
             try
-                push!(fields, entryname(CellNamelist) => build(term, CellNamelist))
+                push!(fields, groupname(CellNamelist) => build(term, CellNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -247,17 +247,17 @@ function build(term::IO, ::Type{PWInput})
     haserror = true
     while haserror
         try
-            push!(fields, entryname(KPointsCard) => build(term, KPointsCard))
+            push!(fields, groupname(KPointsCard) => build(term, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
             println(term, string(RED_FG("Something wrong happens, try again!")))
         end
     end
-    push!(fields, entryname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
+    push!(fields, groupname(AtomicSpeciesCard) => AtomicSpeciesCard(AtomicSpecies[]))
     push!(
         fields,
-        entryname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]),
+        groupname(AtomicPositionsCard) => AtomicPositionsCard("alat", AtomicPosition[]),
     )
     result = T(; fields...)
     saveresult = pairs((true, false))[request(
