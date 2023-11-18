@@ -3,8 +3,6 @@ using Accessors: PropertyLens, set
 using REPL.TerminalMenus: request, terminal
 using Term: @green, @red
 
-using ..QuantumESPRESSOHelpers: YES_NO_MENU
-
 export build
 
 function build end

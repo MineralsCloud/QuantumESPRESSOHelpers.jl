@@ -1,5 +1,4 @@
 using DataFrames: DataFrame
-using QuantumESPRESSOBase.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParser.PWscf:
     Preamble,
     isjobdone,
@@ -13,9 +12,7 @@ using Term: @blue
 
 using ..QuantumESPRESSOHelpers: YES_NO_MENU
 
-export PWOutput, parse_output
-
-struct PWOutput end
+export parse_output
 
 function parse_output(term::IO)
     print(term, @green "Please give the absolute path to your output file: ")
