@@ -1,7 +1,15 @@
 using Parameters: type2dict
 using PrettyTables: Highlighter, pretty_table, ft_printf
 using QuantumESPRESSOBase.PWscf: AtomicPositionsCard, CellParametersCard
-using QuantumESPRESSOParser.PWscf
+using QuantumESPRESSOParser.PWscf:
+    Preamble,
+    isjobdone,
+    isoptimized,
+    eachatomicpositionscard,
+    eachcellparameterscard,
+    eachconvergedenergy,
+    eachtimeditem,
+    eachdiagonalization
 using Term: @blue
 
 export PWOutput, output_parser
@@ -28,20 +36,21 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
         @green("What exact calculation is this output?"),
         RadioMenu(collect(values(CALCULATIONS))),
     )]
-    if calculation ∈ ("relax", "vc-relax")
+    if calculation == "relax" || calculation == "vc-relax"
         choice = request(
             term,
             @green("Do you want to parse the final or all atomic positions?"),
             RadioMenu(["final", "all"]),
         )
+        cards = collect(eachatomicpositionscard(str))
         if choice == 1
-            ap = tryparsefinal(AtomicPositionsCard, str)
             println(term, @blue "Print the final atomic positions:")
-            display(ap.data)
+            println(term, last(cards).data)
         else
-            ap = tryparseall(AtomicPositionsCard, str)
             println(term, @blue "Print all atomic positions:")
-            foreach(x -> display(x.data), ap)
+            for card in cards
+                println(term, card.data)
+            end
         end
         if calculation == "vc-relax"
             choice = request(
@@ -49,16 +58,17 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
                 @green("Do you want to parse the final or all cell parameters?"),
                 RadioMenu(["final", "all"]),
             )
+            cards = collect(eachcellparameterscard(str))
             if choice == 1
-                cp = tryparsefinal(CellParametersCard, str)
                 println(term, @blue "Print the final cell parameters:")
-                println(term, cp.data)
+                println(term, last(cards).data)
             else
-                cp = tryparseall(CellParametersCard, str)
                 println(term, @blue "Print all cell parameters:")
-                foreach(x -> display(x.data), cp)
+                for card in cards
+                    println(term, card.data)
+                end
             end
-            if isrelaxed(str)
+            if isoptimized(str)
                 println(term, @green "The structure is relaxed!")
             else
                 println(term, @red "The structure is not well-relaxed!")
@@ -77,14 +87,14 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
         term, @green("Do you want to parse the energies?"), RadioMenu(["yes", "no"])
     )
     if choice == 1
-        df = parse_electrons_energies(str, :combined)
+        df = eachconvergedenergy(str)
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
         term, @green("Do you want to parse the time used?"), RadioMenu(["yes", "no"])
     )
     if choice == 1
-        df = parse_clock(str)
+        df = eachtimeditem(str)
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
@@ -93,7 +103,7 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
         RadioMenu(["yes", "no"]),
     )
     if choice == 1
-        df = parse_diagonalization(str)
+        df = eachdiagonalization(str)
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
 end
