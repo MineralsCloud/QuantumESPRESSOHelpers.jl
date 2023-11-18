@@ -12,11 +12,11 @@ using QuantumESPRESSOParser.PWscf:
     eachdiagonalization
 using Term: @blue
 
-export PWOutput, output_parser
+export PWOutput, parse_output
 
 struct PWOutput end
 
-function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
+function parse_output(term::IO)
     print(term, @green "Please give the absolute path to your output file: ")
     path = abspath(strip(readline(term)))
     str = try
@@ -107,3 +107,4 @@ function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
 end
+parse_output() = parse_output(terminal)
