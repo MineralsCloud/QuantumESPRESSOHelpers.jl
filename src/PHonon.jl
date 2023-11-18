@@ -5,7 +5,7 @@ using QuantumESPRESSOBase.PHonon:
     PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist, Q2rInput, DynmatInput
 using REPL.TerminalMenus: RadioMenu, request
 
-using ..QuantumESPRESSOHelpers: setfield_helper
+using ..QuantumESPRESSOHelpers: help_set
 
 import ..QuantumESPRESSOHelpers: build
 
@@ -63,7 +63,7 @@ function build(term::IO, ::Type{PhNamelist})
         k2=k2,
         k3=k3,
     )
-    return setfield_helper(term, ph)
+    return help_set(term, ph)
 end
 function build(term::IO, ::Type{T}) where {T<:Q2rNamelist}
     print(term, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
@@ -81,7 +81,7 @@ function build(term::IO, ::Type{T}) where {T<:Q2rNamelist}
         RadioMenu(collect(values(zasr_pool))),
     )]
     q2r = T(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
-    return setfield_helper(term, q2r)
+    return help_set(term, q2r)
 end
 function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
     dos_pool = pairs((false, true))
@@ -158,7 +158,7 @@ function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
         q_in_cryst_coord=q_in_cryst_coord,
         nosym=nosym,
     )
-    return setfield_helper(term, matdyn)
+    return help_set(term, matdyn)
 end
 function build(term::IO, ::Type{T}) where {T<:DynmatNamelist}
     asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
@@ -175,7 +175,7 @@ function build(term::IO, ::Type{T}) where {T<:DynmatNamelist}
     )
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     dynmat = T(; asr=asr, amass=amass)
-    return setfield_helper(term, dynmat)
+    return help_set(term, dynmat)
 end
 
 # function build(term::IO, ::Type{PhInput})

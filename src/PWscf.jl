@@ -21,7 +21,7 @@ using QuantumESPRESSOFormatter.PWscf
 using REPL.TerminalMenus: RadioMenu, request, terminal
 using Term: @green, @red
 
-import ..QuantumESPRESSOHelpers: build, setfield_helper
+import ..QuantumESPRESSOHelpers: build, help_set
 
 const CALCULATIONS = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
 const RESTART_MODES = Base.vect("from_scratch", "restart")
@@ -55,7 +55,7 @@ function build(term::IO, ::Type{ControlNamelist})
     print(term, @green "Convergence threshold on forces (a.u): ")
     forc_conv_thr = parse(Float64, readline(term))
     control = ControlNamelist(; calculation, restart_mode, etot_conv_thr, forc_conv_thr)
-    return setfield_helper(term, control)
+    return help_set(term, control)
 end
 function build(term::IO, ::Type{SystemNamelist})
     print(term, @green "Please input the Bravais lattice index `ibrav`: ")
@@ -79,7 +79,7 @@ function build(term::IO, ::Type{SystemNamelist})
     )
     ecutrho = parse(Float64, readline(term))
     system = SystemNamelist(; ibrav, celldm, nat, ntyp, ecutwfc, ecutrho)
-    return setfield_helper(term, system)
+    return help_set(term, system)
 end
 function build(term::IO, ::Type{ElectronsNamelist})
     print(
@@ -93,7 +93,7 @@ function build(term::IO, ::Type{ElectronsNamelist})
         RadioMenu(DIAGONALIZATIONS; charset=:ascii),
     )]
     electrons = ElectronsNamelist(; conv_thr, diagonalization)
-    return setfield_helper(term, electrons)
+    return help_set(term, electrons)
 end
 function build(term::IO, ::Type{IonsNamelist})
     ion_dynamics = ION_DYNAMICS_POOL[request(
@@ -107,7 +107,7 @@ function build(term::IO, ::Type{IonsNamelist})
         RadioMenu(ION_TEMPERATURES; charset=:ascii),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
-    return setfield_helper(term, ions)
+    return help_set(term, ions)
 end
 function build(term::IO, ::Type{CellNamelist})
     cell_dynamics = CELL_DYNAMICS_POOL[request(
@@ -131,7 +131,7 @@ function build(term::IO, ::Type{CellNamelist})
     )
     press_conv_thr = parse(Float64, readline(term))
     cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
-    return setfield_helper(term, cell)
+    return help_set(term, cell)
 end
 function build(term::IO, ::Type{KPointsCard})
     kpt_style = request(

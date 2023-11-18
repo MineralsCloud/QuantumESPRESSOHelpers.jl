@@ -9,7 +9,7 @@ export build
 function build end
 
 # This is a helper function and should not be exported.
-function setfield_helper(term::IO, nml::T) where {T<:Namelist}
+function help_set(term::IO, nml::Namelist)
     while true
         print(term, @green string(nml))
         # It will continuously print until the user chooses `"no"`, i.e., he/she is satisfied.
@@ -24,17 +24,17 @@ function setfield_helper(term::IO, nml::T) where {T<:Namelist}
                 field = Symbol(strip(readline(term)))
                 # Once a field successfully changes, go back to the above menu.
                 # The code will asks the user whether to change another field.
-                if hasfield(T, field)
+                if hasfield(typeof(nml), field)
                     print(term, @green "Type its value: ")
                     try
-                        S = fieldtype(T, field)
+                        S = fieldtype(typeof(nml), field)
                         nml = if S <: AbstractString
                             set(nml, PropertyLens{field}(), chomp(readline(term)))
                         else
                             set(
                                 nml,
                                 PropertyLens{field}(),
-                                parse(fieldtype(T, field), readline(term)),
+                                parse(fieldtype(typeof(nml), field), readline(term)),
                             )
                         end
                     catch e
@@ -54,7 +54,7 @@ function setfield_helper(term::IO, nml::T) where {T<:Namelist}
     end
     return nml
 end
-setfield_helper(nml) = setfield_helper(terminal, nml)
+help_set(nml) = help_set(terminal, nml)
 
 include("PWscf.jl")
 include("PHonon.jl")
