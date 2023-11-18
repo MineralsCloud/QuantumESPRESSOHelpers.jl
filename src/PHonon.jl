@@ -7,16 +7,22 @@ using Term: @green
 
 using ..QuantumESPRESSOHelpers: YES_NO_MENU, help_set
 
+const EPSIL = pairs((false, true))
+const Q_IN_BAND_FORM = pairs((false, true))
+const ZASR = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
+const DOS = pairs((false, true))
+const ASR = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
+const Q_IN_CRYST_COORD = pairs((false, true))
+const NOSYM = pairs((false, true))
+
 function build(term::IO, ::Type{PhNamelist})
     print(
         term,
         @green "Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): "
     )
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    epsil_pool = pairs((false, true))
-    epsil = epsil_pool[request(term, @green("Please select the `epsil`: "), YES_NO_MENU)]
-    q_in_band_form_pool = pairs((false, true))
-    q_in_band_form = q_in_band_form_pool[request(
+    epsil = EPSIL[request(term, @green("Please select the `epsil`: "), YES_NO_MENU)]
+    q_in_band_form = Q_IN_BAND_FORM[request(
         term, @green("Please select the `q_in_band_form`: "), YES_NO_MENU
     )]
     print(
@@ -41,20 +47,18 @@ function build(term::IO, ::Type{Q2rNamelist})
     fildyn = strip(readline(term))
     print(term, @green "name of output force constants `flfrc`: ")
     flfrc = strip(readline(term))
-    zasr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
-    zasr = zasr_pool[request(
+    zasr = ZASR[request(
         term,
         @green(
             "Please input the type of acoustic sum rules used for the Born effective charges `zasr`: "
         ),
-        RadioMenu(collect(values(zasr_pool))),
+        RadioMenu(collect(values(ZASR))),
     )]
     q2r = Q2rNamelist(; fildyn, flfrc, zasr)
     return help_set(term, q2r)
 end
 function build(term::IO, ::Type{MatdynNamelist})
-    dos_pool = pairs((false, true))
-    dos = dos_pool[request(
+    dos = DOS[request(
         term,
         @green("Please select if calculate phonon density of states `dos`: "),
         YES_NO_MENU,
@@ -66,11 +70,10 @@ function build(term::IO, ::Type{MatdynNamelist})
         @green "Please input uniform q-point grid for DOS calculation `nk` 1-3 (separated by spaces): "
     )
     nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
-    asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
-    asr = asr_pool[request(
+    asr = ASR[request(
         term,
         @green("Please input the type of acoustic sum rule `asr`: "),
-        RadioMenu(collect(values(asr_pool))),
+        RadioMenu(collect(values(ASR))),
     )]
     print(term, @green "name of output force constants `flfrc`: ")
     flfrc = strip(readline(term))
@@ -83,16 +86,13 @@ function build(term::IO, ::Type{MatdynNamelist})
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     print(term, @green "Please input the number of atom types in the supercell `ntyp`: ")
     ntyp = parse(Int, readline(term))
-    q_in_band_form_pool = pairs((false, true))
-    q_in_band_form = q_in_band_form_pool[request(
+    q_in_band_form = Q_IN_BAND_FORM[request(
         term, @green("Please select the `q_in_band_form`: "), YES_NO_MENU
     )]
-    q_in_cryst_coord_pool = pairs((false, true))
-    q_in_cryst_coord = q_in_cryst_coord_pool[request(
+    q_in_cryst_coord = Q_IN_CRYST_COORD[request(
         term, @green("Please select the `q_in_cryst_coord`: "), YES_NO_MENU
     )]
-    nosym_pool = pairs((false, true))
-    nosym = nosym_pool[request(
+    nosym = NOSYM[request(
         term,
         @green("Please select if impose symmetry and time reversal `nosym`: "),
         YES_NO_MENU,
@@ -115,11 +115,10 @@ function build(term::IO, ::Type{MatdynNamelist})
     return help_set(term, matdyn)
 end
 function build(term::IO, ::Type{DynmatNamelist})
-    asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
-    asr = asr_pool[request(
+    asr = ASR[request(
         term,
         @green("Please select the type of acoustic sum rule `asr`: "),
-        RadioMenu(collect(values(asr_pool))),
+        RadioMenu(collect(values(ASR))),
     )]
     print(
         term, @green "Please input mass for each atom type `amass` (separated by spaces): "
