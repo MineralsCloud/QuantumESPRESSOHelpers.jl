@@ -16,7 +16,7 @@ function setfield_helper(term::IO, nml::T) where {T<:Namelist}
         isdone = Base.vect(false, true)[request(
             term,
             @green("We generate an example `$(nameof(T))`. Want to change/add any field?"),
-            RadioMenu(["yes", "no"]),
+            RadioMenu(Base.vect("yes", "no"); charset=:ascii),
         )]
         if !isdone
             while true

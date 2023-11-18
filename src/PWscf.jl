@@ -46,7 +46,7 @@ function build(term::IO, ::Type{ControlNamelist})
     calculation = CALCULATIONS[request(
         term,
         @green("What exact calculation do you want to run?"),
-        RadioMenu(collect(values(CALCULATIONS))),
+        RadioMenu(CALCULATIONS; charset=:ascii),
     )]
     restart_mode = RESTART_MODES[request(
         term, @green("Starting from scratch?"), RadioMenu(["yes", "no"])
@@ -91,7 +91,7 @@ function build(term::IO, ::Type{ElectronsNamelist})
     diagonalization = DIAGONALIZATIONS[request(
         term,
         @green("Please input the diagonalization method `diagonalization`: "),
-        RadioMenu(collect(values(DIAGONALIZATIONS))),
+        RadioMenu(DIAGONALIZATIONS; charset=:ascii),
     )]
     electrons = ElectronsNamelist(; conv_thr, diagonalization)
     return setfield_helper(term, electrons)
@@ -100,12 +100,12 @@ function build(term::IO, ::Type{IonsNamelist})
     ion_dynamics = ION_DYNAMICS_POOL[request(
         term,
         @green("Please input the type of ionic dynamics `ion_dynamics`: "),
-        RadioMenu(collect(values(ION_DYNAMICS_POOL))),
+        RadioMenu(ION_DYNAMICS_POOL; charset=:ascii),
     )]
     ion_temperature = ION_TEMPERATURES[request(
         term,
         @green("Please input the ions temperature `ion_temperature`: "),
-        RadioMenu(collect(values(ION_TEMPERATURES))),
+        RadioMenu(ION_TEMPERATURES; charset=:ascii),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
     return setfield_helper(term, ions)
@@ -114,7 +114,7 @@ function build(term::IO, ::Type{CellNamelist})
     cell_dynamics = CELL_DYNAMICS_POOL[request(
         term,
         @green("Please input the type of dynamics for the cell `cell_dynamics`: "),
-        RadioMenu(collect(values(CELL_DYNAMICS_POOL))),
+        RadioMenu(CELL_DYNAMICS_POOL; charset=:ascii),
     )]
     print(
         term,
