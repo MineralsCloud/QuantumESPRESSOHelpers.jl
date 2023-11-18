@@ -1,4 +1,3 @@
-using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons: Crayon
@@ -12,10 +11,10 @@ export PWOutput, output_parser
 
 struct PWOutput end
 
-function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
+function output_parser(term::IO, ::Type{T}) where {T<:PWOutput}
     calculations = pairs(("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md"))
-    print(terminal, GREEN_FG("Please give the absolute path to your output file: "))
-    path = abspath(strip(readline(terminal)))
+    print(term, GREEN_FG("Please give the absolute path to your output file: "))
+    path = abspath(strip(readline(term)))
     str = try
         open(path, "r") do io
             read(io, String)
@@ -24,49 +23,49 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         @warn("File '$path' not found!")
     end
     if isjobdone(str)
-        println(terminal, GREEN_FG("The job is done! Ready to parse!"))
+        println(term, GREEN_FG("The job is done! Ready to parse!"))
     else
-        println(terminal, RED_FG("The job is not finished, be careful!"))
+        println(term, RED_FG("The job is not finished, be careful!"))
     end
     calculation = calculations[request(
-        terminal,
+        term,
         string(GREEN_FG("What exact calculation is this output?")),
         RadioMenu(collect(values(calculations))),
     )]
     if calculation ∈ ("relax", "vc-relax")
         choice = request(
-            terminal,
+            term,
             string(GREEN_FG("Do you want to parse the final or all atomic positions?")),
             RadioMenu(["final", "all"]),
         )
         if choice == 1
             ap = tryparsefinal(AtomicPositionsCard, str)
-            println(terminal, BLUE_FG("Print the final atomic positions:"))
+            println(term, BLUE_FG("Print the final atomic positions:"))
             display(ap.data)
         else
             ap = tryparseall(AtomicPositionsCard, str)
-            println(terminal, BLUE_FG("Print all atomic positions:"))
+            println(term, BLUE_FG("Print all atomic positions:"))
             foreach(x -> display(x.data), ap)
         end
         if calculation == "vc-relax"
             choice = request(
-                terminal,
+                term,
                 string(GREEN_FG("Do you want to parse the final or all cell parameters?")),
                 RadioMenu(["final", "all"]),
             )
             if choice == 1
                 cp = tryparsefinal(CellParametersCard, str)
-                println(terminal, BLUE_FG("Print the final cell parameters:"))
-                println(terminal, cp.data)
+                println(term, BLUE_FG("Print the final cell parameters:"))
+                println(term, cp.data)
             else
                 cp = tryparseall(CellParametersCard, str)
-                println(terminal, BLUE_FG("Print all cell parameters:"))
+                println(term, BLUE_FG("Print all cell parameters:"))
                 foreach(x -> display(x.data), cp)
             end
             if isrelaxed(str)
-                println(terminal, GREEN_FG("The structure is relaxed!"))
+                println(term, GREEN_FG("The structure is relaxed!"))
             else
-                println(terminal, RED_FG("The structure is not well-relaxed!"))
+                println(term, RED_FG("The structure is not well-relaxed!"))
             end
         end
     end
@@ -74,7 +73,7 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         f=(data, i, j) -> (i % 2) == 0, crayon=Crayon(; background=:blue)
     )
     choice = request(
-        terminal,
+        term,
         string(GREEN_FG("Do you want to parse its summary?")),
         RadioMenu(["yes", "no"]),
     )
@@ -83,7 +82,7 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         pretty_table(type2dict(preamble); highlighters=hl_odd)
     end
     choice = request(
-        terminal,
+        term,
         string(GREEN_FG("Do you want to parse the energies?")),
         RadioMenu(["yes", "no"]),
     )
@@ -92,7 +91,7 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
-        terminal,
+        term,
         string(GREEN_FG("Do you want to parse the time used?")),
         RadioMenu(["yes", "no"]),
     )
@@ -101,7 +100,7 @@ function output_parser(terminal::TTYTerminal, ::Type{T}) where {T<:PWOutput}
         pretty_table(df; highlighters=hl_odd, formatter=ft_printf("%10.5f"))
     end
     choice = request(
-        terminal,
+        term,
         string(GREEN_FG("Do you want to parse the diagonalization info?")),
         RadioMenu(["yes", "no"]),
     )

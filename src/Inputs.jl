@@ -1,4 +1,3 @@
-using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
@@ -10,12 +9,12 @@ export build
 function build end
 
 # This is a helper function and should not be exported.
-function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
+function setfield_helper(term::IO, nml::T) where {T<:Namelist}
     while true
-        print(terminal, string(BLUE_FG(qestring(nml))))
+        print(term, string(BLUE_FG(qestring(nml))))
         # It will continuously print until the user chooses `"no"`, i.e., he/she is satisfied.
         isdone = pairs((false, true))[request(
-            terminal,
+            term,
             string(
                 GREEN_FG(
                     "We generate an example `$(nameof(T))`. Want to change/add any field?"
@@ -25,27 +24,27 @@ function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
         )]
         if !isdone
             while true
-                print(terminal, string(GREEN_FG("Type a field name: ")))
-                field = Symbol(strip(readline(terminal)))
+                print(term, string(GREEN_FG("Type a field name: ")))
+                field = Symbol(strip(readline(term)))
                 # Once a field successfully changes, go back to the above menu.
                 # The code will asks the user whether to change another field.
                 if hasfield(T, field)
-                    print(terminal, string(GREEN_FG("Type its value: ")))
+                    print(term, string(GREEN_FG("Type its value: ")))
                     try
                         S = fieldtype(T, field)
                         nml = if S <: AbstractString
-                            set(nml, PropertyLens{field}(), chomp(readline(terminal)))
+                            set(nml, PropertyLens{field}(), chomp(readline(term)))
                         else
                             set(
                                 nml,
                                 PropertyLens{field}(),
-                                parse(fieldtype(T, field), readline(terminal)),
+                                parse(fieldtype(T, field), readline(term)),
                             )
                         end
                     catch e
                         !isa(e, AssertionError) && rethrow(e)
                         println(
-                            terminal,
+                            term,
                             string(RED_FG("A wrong value is given to! Try a new one!")),
                         )
                         continue
@@ -53,7 +52,7 @@ function setfield_helper(terminal::TTYTerminal, nml::T) where {T<:Namelist}
                     break
                 end
                 # If the field has a wrong name, go back to `"Type a field name: "`.
-                println(terminal, string(RED_FG("Unknown field given! Try again!")))
+                println(term, string(RED_FG("Unknown field given! Try again!")))
                 continue
             end
             continue

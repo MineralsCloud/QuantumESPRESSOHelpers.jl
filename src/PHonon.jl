@@ -1,6 +1,5 @@
 module PHonon
 
-using REPL.Terminals: TTYTerminal
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: GREEN_FG
@@ -11,52 +10,46 @@ using ..QuantumESPRESSOHelpers: setfield_helper
 
 import ..QuantumESPRESSOHelpers: build
 
-function build(terminal::TTYTerminal, ::Type{PhNamelist})
+function build(term::IO, ::Type{PhNamelist})
     print(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): ",
             ),
         ),
     )
-    amass = map(x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false))
+    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     epsil_pool = pairs((false, true))
     epsil = epsil_pool[request(
-        terminal, string(GREEN_FG("Please select the `epsil`: ")), RadioMenu([false, true])
+        term, string(GREEN_FG("Please select the `epsil`: ")), RadioMenu([false, true])
     )]
     q_in_band_form_pool = pairs((false, true))
     q_in_band_form = q_in_band_form_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select the `q_in_band_form`: ")),
         RadioMenu([false, true]),
     )]
     print(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input parameters of the Monkhorst-Pack grid `nq` 1-3 (separated by spaces): ",
             ),
         ),
     )
-    nq1, nq2, nq3 = map(
-        x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false)
-    )
+    nq1, nq2, nq3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     print(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input parameters of the Monkhorst-Pack grid `nk` 1-3 (separated by spaces): ",
             ),
         ),
     )
-    nk1, nk2, nk3 = map(
-        x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false)
-    )
-    print(terminal, string(GREEN_FG("Please input offset `k` 1-3 (separated by spaces): ")))
-    k1, k2, k3 = map(
-        x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false)
-    )
+    nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    print(term, string(GREEN_FG("Please input offset `k` 1-3 (separated by spaces): ")))
+    k1, k2, k3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     ph = T(;
         amass=amass,
         epsil=epsil,
@@ -71,16 +64,16 @@ function build(terminal::TTYTerminal, ::Type{PhNamelist})
         k2=k2,
         k3=k3,
     )
-    return setfield_helper(terminal, ph)
+    return setfield_helper(term, ph)
 end
-function build(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
-    print(terminal, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
-    fildyn = strip(readline(terminal))
-    print(terminal, string(GREEN_FG("name of output force constants `flfrc`: ")))
-    flfrc = strip(readline(terminal))
+function build(term::IO, ::Type{T}) where {T<:Q2rNamelist}
+    print(term, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
+    fildyn = strip(readline(term))
+    print(term, string(GREEN_FG("name of output force constants `flfrc`: ")))
+    flfrc = strip(readline(term))
     zasr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     zasr = zasr_pool[request(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input the type of acoustic sum rules used for the Born effective charges `zasr`: ",
@@ -89,67 +82,65 @@ function build(terminal::TTYTerminal, ::Type{T}) where {T<:Q2rNamelist}
         RadioMenu(collect(values(zasr_pool))),
     )]
     q2r = T(; fildyn=fildyn, flfrc=flfrc, zasr=zasr)
-    return setfield_helper(terminal, q2r)
+    return setfield_helper(term, q2r)
 end
-function build(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynNamelist}
+function build(term::IO, ::Type{T}) where {T<:MatdynNamelist}
     dos_pool = pairs((false, true))
     dos = dos_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select if calculate phonon density of states `dos`: ")),
         RadioMenu([false, true]),
     )]
-    print(terminal, string(GREEN_FG("Please input the energy step, in cm^(-1) `deltaE`: ")))
-    deltaE = parse(Float64, readline(terminal))
+    print(term, string(GREEN_FG("Please input the energy step, in cm^(-1) `deltaE`: ")))
+    deltaE = parse(Float64, readline(term))
     print(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input uniform q-point grid for DOS calculation `nk` 1-3 (separated by spaces): ",
             ),
         ),
     )
-    nk1, nk2, nk3 = map(
-        x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false)
-    )
+    nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     asr = asr_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please input the type of acoustic sum rule `asr`: ")),
         RadioMenu(collect(values(asr_pool))),
     )]
-    print(terminal, string(GREEN_FG("name of output force constants `flfrc`: ")))
-    flfrc = strip(readline(terminal))
-    print(terminal, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
-    fildyn = strip(readline(terminal))
+    print(term, string(GREEN_FG("name of output force constants `flfrc`: ")))
+    flfrc = strip(readline(term))
+    print(term, string(GREEN_FG("name of input dynamical matrices `fildyn`: ")))
+    fildyn = strip(readline(term))
     print(
-        terminal,
+        term,
         string(
             GREEN_FG(
                 "Please input the masses of atoms in the supercell (a.m.u.) `amass` (separated by spaces): ",
             ),
         ),
     )
-    amass = map(x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false))
+    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     print(
-        terminal,
+        term,
         string(GREEN_FG("Please input the number of atom types in the supercell `ntyp`: ")),
     )
-    ntyp = parse(Int, readline(terminal))
+    ntyp = parse(Int, readline(term))
     q_in_band_form_pool = pairs((false, true))
     q_in_band_form = q_in_band_form_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select the `q_in_band_form`: ")),
         RadioMenu([false, true]),
     )]
     q_in_cryst_coord_pool = pairs((false, true))
     q_in_cryst_coord = q_in_cryst_coord_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select the `q_in_cryst_coord`: ")),
         RadioMenu([false, true]),
     )]
     nosym_pool = pairs((false, true))
     nosym = nosym_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select if impose symmetry and time reversal `nosym`: ")),
         RadioMenu([false, true]),
     )]
@@ -168,37 +159,37 @@ function build(terminal::TTYTerminal, ::Type{T}) where {T<:MatdynNamelist}
         q_in_cryst_coord=q_in_cryst_coord,
         nosym=nosym,
     )
-    return setfield_helper(terminal, matdyn)
+    return setfield_helper(term, matdyn)
 end
-function build(terminal::TTYTerminal, ::Type{T}) where {T<:DynmatNamelist}
+function build(term::IO, ::Type{T}) where {T<:DynmatNamelist}
     asr_pool = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
     asr = asr_pool[request(
-        terminal,
+        term,
         string(GREEN_FG("Please select the type of acoustic sum rule `asr`: ")),
         RadioMenu(collect(values(asr_pool))),
     )]
     print(
-        terminal,
+        term,
         string(
             GREEN_FG("Please input mass for each atom type `amass` (separated by spaces): ")
         ),
     )
-    amass = map(x -> parse(Float64, x), split(readline(terminal), " "; keepempty=false))
+    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     dynmat = T(; asr=asr, amass=amass)
-    return setfield_helper(terminal, dynmat)
+    return setfield_helper(term, dynmat)
 end
 
-# function build(terminal::TTYTerminal, ::Type{PhInput})
-#     return build(terminal, PhNamelist)
+# function build(term::IO, ::Type{PhInput})
+#     return build(term, PhNamelist)
 # end
-function build(terminal::TTYTerminal, ::Type{Q2rInput})
-    return Q2rInput(build(terminal, Q2rNamelist))
+function build(term::IO, ::Type{Q2rInput})
+    return Q2rInput(build(term, Q2rNamelist))
 end
-# function build(terminal::TTYTerminal, ::Type{MatdynInput})
-#     return build(terminal, MatdynNamelist)
+# function build(term::IO, ::Type{MatdynInput})
+#     return build(term, MatdynNamelist)
 # end
-function build(terminal::TTYTerminal, ::Type{DynmatInput})
-    return DynmatInput(build(terminal, DynmatNamelist))
+function build(term::IO, ::Type{DynmatInput})
+    return DynmatInput(build(term, DynmatNamelist))
 end
 
 end
