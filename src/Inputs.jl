@@ -1,7 +1,7 @@
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: BLUE_FG, GREEN_FG, RED_FG
-using QuantumESPRESSOBase: Namelist, qestring
+using QuantumESPRESSOBase: Namelist
 using Setfield: PropertyLens, set
 
 export build
@@ -11,7 +11,7 @@ function build end
 # This is a helper function and should not be exported.
 function setfield_helper(term::IO, nml::T) where {T<:Namelist}
     while true
-        print(term, string(BLUE_FG(qestring(nml))))
+        print(term, string(BLUE_FG(nml)))
         # It will continuously print until the user chooses `"no"`, i.e., he/she is satisfied.
         isdone = pairs((false, true))[request(
             term,

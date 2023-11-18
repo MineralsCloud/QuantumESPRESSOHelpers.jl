@@ -3,7 +3,7 @@ module PWscf
 using REPL.TerminalMenus: RadioMenu, request
 
 using Crayons.Box: RED_FG, GREEN_FG
-using QuantumESPRESSOBase: entryname, qestring
+using QuantumESPRESSOBase: entryname
 using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
     SystemNamelist,
@@ -267,7 +267,7 @@ function build(term::IO, ::Type{PWInput})
     )]
     if saveresult
         print(term, string(GREEN_FG("Input file name: ")))
-        write(chomp(readline(term)), qestring(result))
+        write(chomp(readline(term)), result)
     end
     return result
 end
