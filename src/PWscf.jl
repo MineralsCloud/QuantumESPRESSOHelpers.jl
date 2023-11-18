@@ -164,15 +164,14 @@ function build(term::IO, ::Type{CellNamelist})
     cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
     return setfield_helper(term, cell)
 end
-
-function build(term::IO, ::Type{T}) where {T<:KPointsCard}
+function build(term::IO, ::Type{KPointsCard})
     kpt_style = request(
         term,
         string(GREEN_FG("What k-point style do you want?")),
         RadioMenu(["gamma", "automatic"]),
     )
     return if kpt_style == 1
-        KPointsCard("gamma", GammaPoint())
+        GammaPointCard()
     else  # "automatic"
         print(
             term,
@@ -190,10 +189,9 @@ function build(term::IO, ::Type{T}) where {T<:KPointsCard}
             ),
         )
         offsets = map(x -> parse(Int, x), split(readline(term), " "; keepempty=false))
-        return KPointsCard("automatic", MonkhorstPackGrid(grid, offsets))
+        return KMeshCard(MonkhorstPackGrid(grid, offsets))
     end
 end
-
 function build(term::IO, ::Type{PWInput})
     fields = Dict{Symbol,Any}()
     for S in (ControlNamelist, SystemNamelist, ElectronsNamelist)
