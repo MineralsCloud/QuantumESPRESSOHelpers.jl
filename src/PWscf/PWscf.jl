@@ -21,6 +21,8 @@ using QuantumESPRESSOFormatter.PWscf
 using REPL.TerminalMenus: RadioMenu, request, terminal
 using Term: @green, @red
 
+using ..QuantumESPRESSOHelpers: help_set
+
 const CALCULATIONS = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
 const RESTART_MODES = Base.vect("from_scratch", "restart")
 const DIAGONALIZATIONS = Base.vect("david", "cg", "cg-serial", "david-serial")
@@ -221,7 +223,6 @@ function build(term::IO, ::Type{PWInput})
 end
 build(T::Type) = build(terminal, T)
 
-include("../input.jl")
 include("output.jl")
 
 end
