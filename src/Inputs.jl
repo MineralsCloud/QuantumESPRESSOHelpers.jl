@@ -29,28 +29,35 @@ end
 help_set(nml) = help_set(terminal, nml)
 
 function _help_set_iter(term, nml::Namelist)
-    while true
-        print(term, @green "Type a field name: ")
-        field = Symbol(strip(readline(term)))
-        if hasfield(typeof(nml), field)
-            print(term, @green "Type its value: ")
-            try
-                S = fieldtype(typeof(nml), field)
-                return if S <: AbstractString
-                    set(nml, PropertyLens{field}(), chomp(readline(term)))
-                else
-                    set(nml, PropertyLens{field}(), parse(S, readline(term)))
+    try
+        while true
+            print(term, @green "Type a field name: ")
+            field = Symbol(strip(readline(term)))
+            if hasfield(typeof(nml), field)
+                print(term, @green "Type its value: ")
+                try
+                    S = fieldtype(typeof(nml), field)
+                    nml = if S <: AbstractString
+                        set(nml, PropertyLens{field}(), chomp(readline(term)))
+                    else
+                        set(nml, PropertyLens{field}(), parse(S, readline(term)))
+                    end
+                catch e
+                    if !(e isa AssertionError)
+                        rethrow(e)
+                    end
+                    println(term, @red "A wrong value is given! Try a new one!")
                 end
-            catch e
-                if !(e isa AssertionError)
-                    rethrow(e)
-                end
-                println(term, @red "A wrong value is given! Try a new one!")
+            else
+                println(term, @red "Unknown field given! Try again!")
             end
-        else
-            println(term, @red "Unknown field given! Try again!")
+        end
+    catch e
+        if !(e isa InterruptException)
+            rethrow(e)
         end
     end
+    return nml
 end
 
 include("PWscf.jl")
