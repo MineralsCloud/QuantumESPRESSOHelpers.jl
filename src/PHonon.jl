@@ -5,6 +5,8 @@ using QuantumESPRESSOBase.PHonon:
 using REPL.TerminalMenus: RadioMenu, request
 using Term: @green
 
+using ..QuantumESPRESSOHelpers: YES_NO_MENU, help_set
+
 function build(term::IO, ::Type{PhNamelist})
     print(
         term,
@@ -12,12 +14,10 @@ function build(term::IO, ::Type{PhNamelist})
     )
     amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
     epsil_pool = pairs((false, true))
-    epsil = epsil_pool[request(
-        term, @green("Please select the `epsil`: "), RadioMenu([false, true])
-    )]
+    epsil = epsil_pool[request(term, @green("Please select the `epsil`: "), YES_NO_MENU)]
     q_in_band_form_pool = pairs((false, true))
     q_in_band_form = q_in_band_form_pool[request(
-        term, @green("Please select the `q_in_band_form`: "), RadioMenu([false, true])
+        term, @green("Please select the `q_in_band_form`: "), YES_NO_MENU
     )]
     print(
         term,
@@ -68,7 +68,7 @@ function build(term::IO, ::Type{MatdynNamelist})
     dos = dos_pool[request(
         term,
         @green("Please select if calculate phonon density of states `dos`: "),
-        RadioMenu([false, true]),
+        YES_NO_MENU,
     )]
     print(term, @green "Please input the energy step, in cm^(-1) `deltaE`: ")
     deltaE = parse(Float64, readline(term))
@@ -96,17 +96,17 @@ function build(term::IO, ::Type{MatdynNamelist})
     ntyp = parse(Int, readline(term))
     q_in_band_form_pool = pairs((false, true))
     q_in_band_form = q_in_band_form_pool[request(
-        term, @green("Please select the `q_in_band_form`: "), RadioMenu([false, true])
+        term, @green("Please select the `q_in_band_form`: "), YES_NO_MENU
     )]
     q_in_cryst_coord_pool = pairs((false, true))
     q_in_cryst_coord = q_in_cryst_coord_pool[request(
-        term, @green("Please select the `q_in_cryst_coord`: "), RadioMenu([false, true])
+        term, @green("Please select the `q_in_cryst_coord`: "), YES_NO_MENU
     )]
     nosym_pool = pairs((false, true))
     nosym = nosym_pool[request(
         term,
         @green("Please select if impose symmetry and time reversal `nosym`: "),
-        RadioMenu([false, true]),
+        YES_NO_MENU,
     )]
     matdyn = MatdynNamelist(;
         dos=dos,
