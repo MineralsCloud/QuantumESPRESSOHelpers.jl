@@ -21,8 +21,6 @@ Parameters = "0.12"
 PrettyTables = "2"
 Pseudopotentials = "0.8"
 PyFortran90Namelists = "0.1"
-QuantumESPRESSOBase = "0.12"
-QuantumESPRESSOParser = "0.5"
 Setfield = "1"
 julia = "1"
 
