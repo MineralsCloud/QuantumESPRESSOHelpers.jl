@@ -29,6 +29,16 @@ const DIAGONALIZATIONS = pairs(("david", "cg", "cg-serial", "david-serial"))
 const ION_DYNAMICS_POOL = pairs((
     "none", "bfgs", "damp", "verlet", "langevin", "langevin-smc", "beeman"
 ))
+const ION_TEMPERATURES = pairs((
+    "rescaling",
+    "rescale-v",
+    "rescale-T",
+    "reduce-T",
+    "berendsen",
+    "andersen",
+    "initial",
+    "not_controlled",
+))
 const CELL_DYNAMICS_POOL = pairs(("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w"))
 
 function build(term::IO, ::Type{ControlNamelist})
@@ -108,20 +118,10 @@ function build(term::IO, ::Type{IonsNamelist})
         string(GREEN_FG("Please input the type of ionic dynamics `ion_dynamics`: ")),
         RadioMenu(collect(values(ION_DYNAMICS_POOL))),
     )]
-    ion_temperature_pool = (
-        "rescaling",
-        "rescale-v",
-        "rescale-T",
-        "reduce-T",
-        "berendsen",
-        "andersen",
-        "initial",
-        "not_controlled",
-    )
-    ion_temperature = ion_temperature_pool[request(
+    ion_temperature = ION_TEMPERATURES[request(
         term,
         string(GREEN_FG("Please input the ions temperature `ion_temperature`: ")),
-        RadioMenu(collect(values(ion_temperature_pool))),
+        RadioMenu(collect(values(ION_TEMPERATURES))),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
     return setfield_helper(term, ions)
