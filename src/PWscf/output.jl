@@ -11,6 +11,8 @@ using QuantumESPRESSOParser.PWscf:
     eachdiagonalization
 using Term: @blue
 
+using ..QuantumESPRESSOHelpers: YES_NO_MENU
+
 export PWOutput, parse_output
 
 struct PWOutput end
@@ -74,31 +76,23 @@ function parse_output(term::IO)
             end
         end
     end
-    choice = request(
-        term, @green("Do you want to parse its summary?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse its summary?"), YES_NO_MENU)
     if choice == 1
         preamble = parse(Preamble, str)
         println(term, DataFrame(Base.vect(preamble)))
     end
-    choice = request(
-        term, @green("Do you want to parse the energies?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse the energies?"), YES_NO_MENU)
     if choice == 1
         df = DataFrame(eachconvergedenergy(str))
         println(term, df)
     end
-    choice = request(
-        term, @green("Do you want to parse the time used?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse the time used?"), YES_NO_MENU)
     if choice == 1
         df = DataFrame(eachtimeditem(str))
         println(term, df)
     end
     choice = request(
-        term,
-        @green("Do you want to parse the diagonalization info?"),
-        RadioMenu(["yes", "no"]),
+        term, @green("Do you want to parse the diagonalization info?"), YES_NO_MENU
     )
     if choice == 1
         df = DataFrame(eachdiagonalization(str))

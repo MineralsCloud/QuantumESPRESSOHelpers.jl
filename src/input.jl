@@ -1,7 +1,9 @@
 using AbInitioSoftwareBase: Namelist
 using Accessors: PropertyLens, set
-using REPL.TerminalMenus: RadioMenu, request, terminal
+using REPL.TerminalMenus: request, terminal
 using Term: @green, @red
+
+using ..QuantumESPRESSOHelpers: YES_NO_MENU
 
 export build
 
@@ -10,11 +12,7 @@ function build end
 # This is a helper function and should not be exported.
 function help_set(term, nml::Namelist)
     while true
-        user_response = request(
-            term,
-            @green("Want to change/add any field?"),
-            RadioMenu(Base.vect("yes", "no"); charset=:ascii),
-        )
+        user_response = request(term, @green("Want to change/add any field?"), YES_NO_MENU)
         println(term, @green "I'll print the result for you:")
         println(term, @green string(nml))
         if Bool(only(user_response) - 1)
