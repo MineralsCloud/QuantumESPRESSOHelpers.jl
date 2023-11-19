@@ -19,7 +19,7 @@ using QuantumESPRESSOFormatter.PWscf
 using REPL.TerminalMenus: RadioMenu, request
 using Term: @green, @red
 
-using ..QuantumESPRESSOHelpers: help_set
+using ..QuantumESPRESSOHelpers: InputBuilder, FieldSetter
 
 const CALCULATION = Base.vect("scf", "nscf", "bands", "relax", "md", "vc-relax", "vc-md")
 const RESTART_MODE = Base.vect("from_scratch", "restart")
@@ -39,7 +39,7 @@ const ION_TEMPERATURE = Base.vect(
 )
 const CELL_DYNAMICS = Base.vect("none", "sd", "damp-pr", "damp-w", "bfgs", "pr", "w")
 
-function build(io::IO, ::Type{ControlNamelist})
+function (::InputBuilder)(io::IO, ::Type{ControlNamelist})
     calculation = CALCULATION[request(
         io,
         @green("What exact calculation do you want to run?"),
@@ -53,9 +53,9 @@ function build(io::IO, ::Type{ControlNamelist})
     print(io, @green "Convergence threshold on forces (a.u): ")
     forc_conv_thr = parse(Float64, readline(io))
     control = ControlNamelist(; calculation, restart_mode, etot_conv_thr, forc_conv_thr)
-    return help_set(io, control)
+    return FieldSetter()(io, control)
 end
-function build(io::IO, ::Type{SystemNamelist})
+function (::InputBuilder)(io::IO, ::Type{SystemNamelist})
     print(io, @green "Please input the Bravais lattice index `ibrav`: ")
     ibrav = parse(Int, readline(io))
     print(io, @green "Please input a `celldm` 1-6 (separated by spaces): ")
@@ -75,9 +75,9 @@ function build(io::IO, ::Type{SystemNamelist})
     )
     ecutrho = parse(Float64, readline(io))
     system = SystemNamelist(; ibrav, celldm, nat, ntyp, ecutwfc, ecutrho)
-    return help_set(io, system)
+    return FieldSetter()(io, system)
 end
-function build(io::IO, ::Type{ElectronsNamelist})
+function (::InputBuilder)(io::IO, ::Type{ElectronsNamelist})
     print(
         io, @green "Please input the convergence threshold for selfconsistency `conv_thr`: "
     )
@@ -88,9 +88,9 @@ function build(io::IO, ::Type{ElectronsNamelist})
         RadioMenu(DIAGONALIZATION; charset=:ascii),
     )]
     electrons = ElectronsNamelist(; conv_thr, diagonalization)
-    return help_set(io, electrons)
+    return FieldSetter()(io, electrons)
 end
-function build(io::IO, ::Type{IonsNamelist})
+function (::InputBuilder)(io::IO, ::Type{IonsNamelist})
     ion_dynamics = ION_DYNAMICS[request(
         io,
         @green("Please input the type of ionic dynamics `ion_dynamics`: "),
@@ -102,9 +102,9 @@ function build(io::IO, ::Type{IonsNamelist})
         RadioMenu(ION_TEMPERATURE; charset=:ascii),
     )]
     ions = IonsNamelist(; ion_dynamics, ion_temperature)
-    return help_set(io, ions)
+    return FieldSetter()(io, ions)
 end
-function build(io::IO, ::Type{CellNamelist})
+function (::InputBuilder)(io::IO, ::Type{CellNamelist})
     cell_dynamics = CELL_DYNAMICS[request(
         io,
         @green("Please input the type of dynamics for the cell `cell_dynamics`: "),
@@ -126,9 +126,9 @@ function build(io::IO, ::Type{CellNamelist})
     )
     press_conv_thr = parse(Float64, readline(io))
     cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
-    return help_set(io, cell)
+    return FieldSetter()(io, cell)
 end
-function build(io::IO, ::Type{KPointsCard})
+function (::InputBuilder)(io::IO, ::Type{KPointsCard})
     kpt_style = request(
         io, @green("What k-point style do you want?"), RadioMenu(["gamma", "automatic"])
     )
@@ -144,13 +144,13 @@ function build(io::IO, ::Type{KPointsCard})
         return KMeshCard(MonkhorstPackGrid(grid, offsets))
     end
 end
-function build(io::IO, ::Type{PWInput})
+function (builder::InputBuilder)(io::IO, ::Type{PWInput})
     fields = Dict{Symbol,Any}()
     for S in (ControlNamelist, SystemNamelist, ElectronsNamelist)
         haserror = true
         while haserror
             try
-                push!(fields, groupname(S) => build(io, S))
+                push!(fields, groupname(S) => builder(io, S))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -162,7 +162,7 @@ function build(io::IO, ::Type{PWInput})
         haserror = true
         while haserror
             try
-                push!(fields, groupname(IonsNamelist) => build(io, IonsNamelist))
+                push!(fields, groupname(IonsNamelist) => builder(io, IonsNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -176,7 +176,7 @@ function build(io::IO, ::Type{PWInput})
         haserror = true
         while haserror
             try
-                push!(fields, groupname(CellNamelist) => build(io, CellNamelist))
+                push!(fields, groupname(CellNamelist) => builder(io, CellNamelist))
                 haserror = false
             catch e
                 isa(e, InterruptException) && rethrow(e)
@@ -189,7 +189,7 @@ function build(io::IO, ::Type{PWInput})
     haserror = true
     while haserror
         try
-            push!(fields, groupname(KPointsCard) => build(io, KPointsCard))
+            push!(fields, groupname(KPointsCard) => builder(io, KPointsCard))
             haserror = false
         catch e
             isa(e, InterruptException) && rethrow(e)
