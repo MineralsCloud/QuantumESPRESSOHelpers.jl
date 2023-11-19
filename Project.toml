@@ -24,6 +24,7 @@ Pseudopotentials = "0.8"
 QuantumESPRESSOBase = "0.12"
 QuantumESPRESSOFormatter = "0.4"
 QuantumESPRESSOParser = "0.5"
+REPL = "1"
 Term = "2"
 julia = "1"
 
