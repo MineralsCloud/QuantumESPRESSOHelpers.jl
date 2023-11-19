@@ -3,12 +3,20 @@ using Accessors: PropertyLens, set
 using REPL.TerminalMenus: request, terminal
 using Term: @green, @red
 
-export build
+export InputBuilder, build
 
-build(T::Type) = build(terminal, T)
+struct InputBuilder <: QuantumESPRESSOHelper end
+
+(builder::InputBuilder)(nml::Type{<:Namelist}) = builder(terminal, typeof(nml))
+
+const build = InputBuilder()
+
+struct FieldSetter <: QuantumESPRESSOHelper end
+
+(setter::FieldSetter)(nml::Type{<:Namelist}) = setter(terminal, typeof(nml))
 
 # This is a helper function and should not be exported.
-function help_set(term, nml::Namelist)
+function (setter::FieldSetter)(term::IO, nml::Namelist)
     while true
         user_response = request(term, @green("Want to change/add any field?"), YES_NO_MENU)
         println(term, @green "I'll print the result for you:")
@@ -16,13 +24,12 @@ function help_set(term, nml::Namelist)
         if Bool(only(user_response) - 1)
             break  # Break the loop if user chooses 'no'
         end
-        nml = _help_set_iter(term, nml)
+        nml = _set(term, nml)
     end
     return nml
 end
-help_set(nml) = help_set(terminal, nml)
 
-function _help_set_iter(term, nml::Namelist)
+function _set(term, nml::Namelist)
     fields = string.(fieldnames(typeof(nml)))
     try
         println(term, @green "Allowed fields: $fields")
