@@ -7,13 +7,13 @@ export InputBuilder, build
 
 struct InputBuilder <: Helper end
 
-(builder::InputBuilder)(nml::Type{<:Namelist}) = builder(terminal, typeof(nml))
+(builder::InputBuilder)(::Type{T}) where {T<:Namelist} = builder(terminal, T)
 
 const build = InputBuilder()
 
 struct FieldSetter <: Helper end
 
-(setter::FieldSetter)(nml::Type{<:Namelist}) = setter(terminal, typeof(nml))
+(setter::FieldSetter)(::Type{T}) where {T<:Namelist} = setter(terminal, T)
 
 # This is a helper function and should not be exported.
 function (setter::FieldSetter)(io::IO, nml::Namelist)
