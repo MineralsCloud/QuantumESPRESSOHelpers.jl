@@ -12,7 +12,7 @@ using QuantumESPRESSOBase.PHonon:
 using REPL.TerminalMenus: RadioMenu, request
 using Term: @green
 
-using ..QuantumESPRESSOHelpers: YES_NO_MENU, FieldSetter
+using ..QuantumESPRESSOHelpers: YES_NO_MENU, InputBuilder, FieldSetter
 
 const EPSIL = pairs((false, true))
 const Q_IN_BAND_FORM = pairs((false, true))
@@ -22,7 +22,7 @@ const ASR = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
 const Q_IN_CRYST_COORD = pairs((false, true))
 const NOSYM = pairs((false, true))
 
-function build(io::IO, ::Type{PhNamelist})
+function (::InputBuilder)(io::IO, ::Type{PhNamelist})
     print(
         io,
         @green "Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): "
@@ -51,7 +51,7 @@ function build(io::IO, ::Type{PhNamelist})
     )
     return FieldSetter()(io, ph)
 end
-function build(io::IO, ::Type{Q2rNamelist})
+function (::InputBuilder)(io::IO, ::Type{Q2rNamelist})
     print(io, @green "name of input dynamical matrices `fildyn`: ")
     fildyn = strip(readline(io))
     print(io, @green "name of output force constants `flfrc`: ")
@@ -66,7 +66,7 @@ function build(io::IO, ::Type{Q2rNamelist})
     q2r = Q2rNamelist(; fildyn, flfrc, zasr)
     return FieldSetter()(io, q2r)
 end
-function build(io::IO, ::Type{MatdynNamelist})
+function (::InputBuilder)(io::IO, ::Type{MatdynNamelist})
     dos = DOS[request(
         io,
         @green("Please select if calculate phonon density of states `dos`: "),
@@ -123,7 +123,7 @@ function build(io::IO, ::Type{MatdynNamelist})
     )
     return FieldSetter()(io, matdyn)
 end
-function build(io::IO, ::Type{DynmatNamelist})
+function (::InputBuilder)(io::IO, ::Type{DynmatNamelist})
     asr = ASR[request(
         io,
         @green("Please select the type of acoustic sum rule `asr`: "),
@@ -134,9 +134,9 @@ function build(io::IO, ::Type{DynmatNamelist})
     dynmat = DynmatNamelist(; asr, amass)
     return FieldSetter()(io, dynmat)
 end
-build(io::IO, ::Type{PhInput}) = PhInput(build(io, PhNamelist))
-build(io::IO, ::Type{Q2rInput}) = Q2rInput(build(io, Q2rNamelist))
-build(io::IO, ::Type{MatdynInput}) = MatdynInput(build(io, MatdynNamelist))
-build(io::IO, ::Type{DynmatInput}) = DynmatInput(build(io, DynmatNamelist))
+(builder::InputBuilder)(io::IO, ::Type{PhInput}) = PhInput(builder(io, PhNamelist))
+(builder::InputBuilder)(io::IO, ::Type{Q2rInput}) = Q2rInput(builder(io, Q2rNamelist))
+(builder::InputBuilder)(io::IO, ::Type{MatdynInput}) = MatdynInput(builder(io, MatdynNamelist))
+(builder::InputBuilder)(io::IO, ::Type{DynmatInput}) = DynmatInput(builder(io, DynmatNamelist))
 
 end
