@@ -5,13 +5,13 @@ using Term: @green, @red
 
 export InputBuilder, build
 
-struct InputBuilder <: QuantumESPRESSOHelper end
+struct InputBuilder <: Helper end
 
 (builder::InputBuilder)(nml::Type{<:Namelist}) = builder(terminal, typeof(nml))
 
 const build = InputBuilder()
 
-struct FieldSetter <: QuantumESPRESSOHelper end
+struct FieldSetter <: Helper end
 
 (setter::FieldSetter)(nml::Type{<:Namelist}) = setter(terminal, typeof(nml))
 
