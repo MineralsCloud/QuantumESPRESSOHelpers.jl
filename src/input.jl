@@ -16,39 +16,39 @@ struct FieldSetter <: Helper end
 (setter::FieldSetter)(nml::Type{<:Namelist}) = setter(terminal, typeof(nml))
 
 # This is a helper function and should not be exported.
-function (setter::FieldSetter)(term::IO, nml::Namelist)
+function (setter::FieldSetter)(io::IO, nml::Namelist)
     while true
-        user_response = request(term, @green("Want to change/add any field?"), YES_NO_MENU)
-        println(term, @green "I'll print the result for you:")
-        println(term, @green string(nml))
+        user_response = request(io, @green("Want to change/add any field?"), YES_NO_MENU)
+        println(io, @green "I'll print the result for you:")
+        println(io, @green string(nml))
         if Bool(only(user_response) - 1)
             break  # Break the loop if user chooses 'no'
         end
-        nml = _set(term, nml)
+        nml = _set(io, nml)
     end
     return nml
 end
 
-function _set(term, nml::Namelist)
+function _set(io, nml)
     fields = string.(fieldnames(typeof(nml)))
     try
-        println(term, @green "Allowed fields: $fields")
-        print(term, @green "Type a field name: ")
-        field = Symbol(strip(readline(term)))
+        println(io, @green "Allowed fields: $fields")
+        print(io, @green "Type a field name: ")
+        field = Symbol(strip(readline(io)))
         if hasfield(typeof(nml), field)
-            print(term, @green "Type its value: ")
+            print(io, @green "Type its value: ")
             S = fieldtype(typeof(nml), field)
             nml = if S <: AbstractString
-                set(nml, PropertyLens{field}(), chomp(readline(term)))
+                set(nml, PropertyLens{field}(), chomp(readline(io)))
             else
-                set(nml, PropertyLens{field}(), parse(S, readline(term)))
+                set(nml, PropertyLens{field}(), parse(S, readline(io)))
             end
         else
-            println(term, @red "Unknown field given! Try again!")
+            println(io, @red "Unknown field given! Try again!")
         end
     catch e
         if e isa AssertionError
-            println(term, @red "A wrong value is given! Try a new one!")
+            println(io, @red "A wrong value is given! Try a new one!")
         elseif e isa InterruptException
         else
             rethrow(e)
