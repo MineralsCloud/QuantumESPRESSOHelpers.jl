@@ -8,6 +8,7 @@ using QuantumESPRESSOParser.PWscf:
     eachconvergedenergy,
     eachtimeditem,
     eachdiagonalization
+using REPL.TerminalMenus: terminal
 using Term: @blue
 
 using ..QuantumESPRESSOHelpers: YES_NO_MENU, Helper
@@ -18,9 +19,7 @@ const FINAL_ALL_MENU = RadioMenu(Base.vect("final", "all"); charset=:ascii)
 
 struct OutputParser <: Helper end
 
-function (::OutputParser)(io::IO)
-    print(io, @green "Please give the absolute path to your output file: ")
-    path = abspath(strip(readline(io)))
+function (::OutputParser)(io::IO, path)
     str = try
         open(path, "r") do io
             read(io, String)
@@ -100,5 +99,11 @@ function (::OutputParser)(io::IO)
         println(io, df)
     end
 end
+function (::OutputParser)(io::IO)
+    print(io, @green "Please give the absolute path to your output file: ")
+    path = abspath(strip(readline(io)))
+    return OutputParser()(io, path)
+end
+(parser::OutputParser)() = parser(terminal)
 
 const parse_output = OutputParser()
