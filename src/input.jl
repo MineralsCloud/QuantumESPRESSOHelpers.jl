@@ -5,7 +5,7 @@ using Term: @green, @red
 
 export build
 
-function build end
+build(T::Type) = build(terminal, T)
 
 # This is a helper function and should not be exported.
 function help_set(term, nml::Namelist)

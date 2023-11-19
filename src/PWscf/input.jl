@@ -16,7 +16,7 @@ using QuantumESPRESSOBase.PWscf:
     KMeshCard,
     PWInput
 using QuantumESPRESSOFormatter.PWscf
-using REPL.TerminalMenus: RadioMenu, request, terminal
+using REPL.TerminalMenus: RadioMenu, request
 using Term: @green, @red
 
 using ..QuantumESPRESSOHelpers: help_set
@@ -209,9 +209,7 @@ function build(term::IO, ::Type{PWInput})
     )
     result = PWInput(; fields...)
     saveresult = Base.vect(true, false)[request(
-        term,
-        @green("Do you want to save the generated input to file?"),
-        YES_NO_MENU,
+        term, @green("Do you want to save the generated input to file?"), YES_NO_MENU
     )]
     if saveresult
         print(term, @green "Input file name: ")
@@ -219,4 +217,3 @@ function build(term::IO, ::Type{PWInput})
     end
     return result
 end
-build(T::Type) = build(terminal, T)
