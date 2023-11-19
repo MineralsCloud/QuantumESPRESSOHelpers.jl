@@ -1,5 +1,4 @@
 using DataFrames: DataFrame
-using QuantumESPRESSOBase.PWscf: AtomicPositionsCard, CellParametersCard
 using QuantumESPRESSOParser.PWscf:
     Preamble,
     isjobdone,
@@ -11,11 +10,15 @@ using QuantumESPRESSOParser.PWscf:
     eachdiagonalization
 using Term: @blue
 
-export PWOutput, parse_output
+using ..QuantumESPRESSOHelpers: YES_NO_MENU, QuantumESPRESSOHelper
 
-struct PWOutput end
+export OutputParser, parse_output
 
-function parse_output(term::IO)
+const FINAL_ALL_MENU = RadioMenu(Base.vect("final", "all"); charset=:ascii)
+
+struct OutputParser <: QuantumESPRESSOHelper end
+
+function (::OutputParser)(term::IO)
     print(term, @green "Please give the absolute path to your output file: ")
     path = abspath(strip(readline(term)))
     str = try
@@ -30,16 +33,16 @@ function parse_output(term::IO)
     else
         println(term, @red "The job is not finished, be careful!")
     end
-    calculation = CALCULATIONS[request(
+    calculation = CALCULATION[request(
         term,
         @green("What exact calculation is this output?"),
-        RadioMenu(collect(values(CALCULATIONS))),
+        RadioMenu(CALCULATION; charset=:ascii),
     )]
     if calculation == "relax" || calculation == "vc-relax"
         choice = request(
             term,
             @green("Do you want to parse the final or all atomic positions?"),
-            RadioMenu(["final", "all"]),
+            FINAL_ALL_MENU,
         )
         cards = collect(eachatomicpositionscard(str))
         if choice == 1
@@ -55,7 +58,7 @@ function parse_output(term::IO)
             choice = request(
                 term,
                 @green("Do you want to parse the final or all cell parameters?"),
-                RadioMenu(["final", "all"]),
+                FINAL_ALL_MENU,
             )
             cards = collect(eachcellparameterscard(str))
             if choice == 1
@@ -74,35 +77,28 @@ function parse_output(term::IO)
             end
         end
     end
-    choice = request(
-        term, @green("Do you want to parse its summary?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse its summary?"), YES_NO_MENU)
     if choice == 1
         preamble = parse(Preamble, str)
         println(term, DataFrame(Base.vect(preamble)))
     end
-    choice = request(
-        term, @green("Do you want to parse the energies?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse the energies?"), YES_NO_MENU)
     if choice == 1
         df = DataFrame(eachconvergedenergy(str))
         println(term, df)
     end
-    choice = request(
-        term, @green("Do you want to parse the time used?"), RadioMenu(["yes", "no"])
-    )
+    choice = request(term, @green("Do you want to parse the time used?"), YES_NO_MENU)
     if choice == 1
         df = DataFrame(eachtimeditem(str))
         println(term, df)
     end
     choice = request(
-        term,
-        @green("Do you want to parse the diagonalization info?"),
-        RadioMenu(["yes", "no"]),
+        term, @green("Do you want to parse the diagonalization info?"), YES_NO_MENU
     )
     if choice == 1
         df = DataFrame(eachdiagonalization(str))
         println(term, df)
     end
 end
-parse_output() = parse_output(terminal)
+
+const parse_output = OutputParser()

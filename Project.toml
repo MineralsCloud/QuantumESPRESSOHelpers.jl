@@ -18,9 +18,15 @@ REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 
 [compat]
+AbInitioSoftwareBase = "0.10"
+Accessors = "0.1"
 Crayons = "4"
+CrystallographyBase = "0.14"
+DataFrames = "1"
 Pseudopotentials = "0.8"
 PyFortran90Namelists = "0.1"
+QuantumESPRESSOBase = "0.12"
+QuantumESPRESSOFormatter = "0.4"
 QuantumESPRESSOParser = "0.5"
 julia = "1"
 
