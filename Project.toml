@@ -19,6 +19,7 @@ Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 
 [compat]
 Crayons = "4"
+DataFrames = "1"
 Pseudopotentials = "0.8"
 PyFortran90Namelists = "0.1"
 julia = "1"
