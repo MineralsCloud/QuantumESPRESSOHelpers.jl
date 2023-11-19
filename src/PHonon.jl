@@ -20,7 +20,7 @@ function build(term::IO, ::Type{PhNamelist})
         term,
         @green "Please input the atomic mass [amu] of each atomic type `amass` (separated by spaces): "
     )
-    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    amass = map(Base.Fix1(parse, Float64), split(readline(term), " "; keepempty=false))
     epsil = EPSIL[request(term, @green("Please select the `epsil`: "), YES_NO_MENU)]
     q_in_band_form = Q_IN_BAND_FORM[request(
         term, @green("Please select the `q_in_band_form`: "), YES_NO_MENU
@@ -29,14 +29,16 @@ function build(term::IO, ::Type{PhNamelist})
         term,
         @green "Please input parameters of the Monkhorst-Pack grid `nq` 1-3 (separated by spaces): "
     )
-    nq1, nq2, nq3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    nq1, nq2, nq3 = map(
+        Base.Fix1(parse, Float64), split(readline(term), " "; keepempty=false)
+    )
     print(
         term,
         @green "Please input parameters of the Monkhorst-Pack grid `nk` 1-3 (separated by spaces): "
     )
-    nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    nk1, nk2, nk3 = map(Base.Fix1(parse, Int), split(readline(term), " "; keepempty=false))
     print(term, @green "Please input offset `k` 1-3 (separated by spaces): ")
-    k1, k2, k3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    k1, k2, k3 = map(Base.Fix1(parse, Int), split(readline(term), " "; keepempty=false))
     ph = PhNamelist(;
         amass, epsil, q_in_band_form, nq1, nq2, nq3, nk1, nk2, nk3, k1, k2, k3
     )
@@ -69,7 +71,7 @@ function build(term::IO, ::Type{MatdynNamelist})
         term,
         @green "Please input uniform q-point grid for DOS calculation `nk` 1-3 (separated by spaces): "
     )
-    nk1, nk2, nk3 = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    nk1, nk2, nk3 = map(Base.Fix1(parse, Int), split(readline(term), " "; keepempty=false))
     asr = ASR[request(
         term,
         @green("Please input the type of acoustic sum rule `asr`: "),
@@ -83,7 +85,7 @@ function build(term::IO, ::Type{MatdynNamelist})
         term,
         @green "Please input the masses of atoms in the supercell (a.m.u.) `amass` (separated by spaces): "
     )
-    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    amass = map(Base.Fix1(parse, Float64), split(readline(term), " "; keepempty=false))
     print(term, @green "Please input the number of atom types in the supercell `ntyp`: ")
     ntyp = parse(Int, readline(term))
     q_in_band_form = Q_IN_BAND_FORM[request(
@@ -123,7 +125,7 @@ function build(term::IO, ::Type{DynmatNamelist})
     print(
         term, @green "Please input mass for each atom type `amass` (separated by spaces): "
     )
-    amass = map(x -> parse(Float64, x), split(readline(term), " "; keepempty=false))
+    amass = map(Base.Fix1(parse, Float64), split(readline(term), " "; keepempty=false))
     dynmat = DynmatNamelist(; asr, amass)
     return help_set(term, dynmat)
 end
