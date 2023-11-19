@@ -1,7 +1,14 @@
 module PHonon
 
 using QuantumESPRESSOBase.PHonon:
-    PhNamelist, Q2rNamelist, MatdynNamelist, DynmatNamelist, Q2rInput, DynmatInput
+    PhNamelist,
+    Q2rNamelist,
+    MatdynNamelist,
+    DynmatNamelist,
+    PhInput,
+    Q2rInput,
+    MatdynInput,
+    DynmatInput
 using REPL.TerminalMenus: RadioMenu, request
 using Term: @green
 
@@ -129,17 +136,9 @@ function build(term::IO, ::Type{DynmatNamelist})
     dynmat = DynmatNamelist(; asr, amass)
     return help_set(term, dynmat)
 end
-# function build(term::IO, ::Type{PhInput})
-#     return build(term, PhNamelist)
-# end
-function build(term::IO, ::Type{Q2rInput})
-    return Q2rInput(build(term, Q2rNamelist))
-end
-# function build(term::IO, ::Type{MatdynInput})
-#     return build(term, MatdynNamelist)
-# end
-function build(term::IO, ::Type{DynmatInput})
-    return DynmatInput(build(term, DynmatNamelist))
-end
+build(term::IO, ::Type{PhInput}) = PhInput(build(term, PhNamelist))
+build(term::IO, ::Type{Q2rInput}) = Q2rInput(build(term, Q2rNamelist))
+build(term::IO, ::Type{MatdynInput}) = MatdynInput(build(term, MatdynNamelist))
+build(term::IO, ::Type{DynmatInput}) = DynmatInput(build(term, DynmatNamelist))
 
 end
