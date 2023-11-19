@@ -28,6 +28,7 @@ PyFortran90Namelists = "0.1"
 QuantumESPRESSOBase = "0.12"
 QuantumESPRESSOFormatter = "0.4"
 QuantumESPRESSOParser = "0.5"
+Term = "2"
 julia = "1"
 
 [extras]
