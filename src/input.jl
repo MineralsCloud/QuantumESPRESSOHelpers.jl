@@ -30,18 +30,24 @@ function (setter::FieldSetter)(io::IO, nml::Namelist)
 end
 
 function _set(io, nml)
-    fields = string.(fieldnames(typeof(nml)))
+    fields = fieldnames(typeof(nml))
     try
-        println(io, @green "Allowed fields: $fields")
+        println(io, @green "Allowed fields: ")
+        for row in Iterators.partition(fields, 4)
+            for name in row
+                print(io, @green lpad(string(name, "::", fieldtype(typeof(nml), name)), 30))
+            end
+            println(io)
+        end
         print(io, @green "Type a field name: ")
-        field = Symbol(strip(readline(io)))
-        if hasfield(typeof(nml), field)
+        name = Symbol(strip(readline(io)))
+        if hasfield(typeof(nml), name)
             print(io, @green "Type its value: ")
-            S = fieldtype(typeof(nml), field)
+            S = fieldtype(typeof(nml), name)
             nml = if S <: AbstractString
-                set(nml, PropertyLens{field}(), chomp(readline(io)))
+                set(nml, PropertyLens{name}(), chomp(readline(io)))
             else
-                set(nml, PropertyLens{field}(), parse(S, readline(io)))
+                set(nml, PropertyLens{name}(), parse(S, readline(io)))
             end
         else
             println(io, @red "Unknown field given! Try again!")
