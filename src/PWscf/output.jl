@@ -14,6 +14,8 @@ using ..QuantumESPRESSOHelpers: YES_NO_MENU
 
 export parse_output
 
+const FINAL_ALL_MENU = RadioMenu(Base.vect("final", "all"); charset=:ascii)
+
 function parse_output(term::IO)
     print(term, @green "Please give the absolute path to your output file: ")
     path = abspath(strip(readline(term)))
@@ -29,16 +31,16 @@ function parse_output(term::IO)
     else
         println(term, @red "The job is not finished, be careful!")
     end
-    calculation = CALCULATIONS[request(
+    calculation = CALCULATION[request(
         term,
         @green("What exact calculation is this output?"),
-        RadioMenu(collect(values(CALCULATIONS))),
+        RadioMenu(CALCULATION; charset=:ascii),
     )]
     if calculation == "relax" || calculation == "vc-relax"
         choice = request(
             term,
             @green("Do you want to parse the final or all atomic positions?"),
-            RadioMenu(["final", "all"]),
+            FINAL_ALL_MENU,
         )
         cards = collect(eachatomicpositionscard(str))
         if choice == 1
@@ -54,7 +56,7 @@ function parse_output(term::IO)
             choice = request(
                 term,
                 @green("Do you want to parse the final or all cell parameters?"),
-                RadioMenu(["final", "all"]),
+                FINAL_ALL_MENU,
             )
             cards = collect(eachcellparameterscard(str))
             if choice == 1

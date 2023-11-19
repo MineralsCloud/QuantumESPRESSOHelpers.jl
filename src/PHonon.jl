@@ -52,7 +52,7 @@ function build(term::IO, ::Type{Q2rNamelist})
         @green(
             "Please input the type of acoustic sum rules used for the Born effective charges `zasr`: "
         ),
-        RadioMenu(collect(values(ZASR))),
+        RadioMenu(ZASR; charset=:ascii),
     )]
     q2r = Q2rNamelist(; fildyn, flfrc, zasr)
     return help_set(term, q2r)
@@ -73,7 +73,7 @@ function build(term::IO, ::Type{MatdynNamelist})
     asr = ASR[request(
         term,
         @green("Please input the type of acoustic sum rule `asr`: "),
-        RadioMenu(collect(values(ASR))),
+        RadioMenu(ASR; charset=:ascii),
     )]
     print(term, @green "name of output force constants `flfrc`: ")
     flfrc = strip(readline(term))
@@ -118,7 +118,7 @@ function build(term::IO, ::Type{DynmatNamelist})
     asr = ASR[request(
         term,
         @green("Please select the type of acoustic sum rule `asr`: "),
-        RadioMenu(collect(values(ASR))),
+        RadioMenu(ASR; charset=:ascii),
     )]
     print(
         term, @green "Please input mass for each atom type `amass` (separated by spaces): "

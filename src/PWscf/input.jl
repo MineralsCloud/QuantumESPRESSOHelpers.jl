@@ -211,7 +211,7 @@ function build(term::IO, ::Type{PWInput})
     saveresult = Base.vect(true, false)[request(
         term,
         @green("Do you want to save the generated input to file?"),
-        RadioMenu(["yes", "no"]),
+        YES_NO_MENU,
     )]
     if saveresult
         print(term, @green "Input file name: ")
