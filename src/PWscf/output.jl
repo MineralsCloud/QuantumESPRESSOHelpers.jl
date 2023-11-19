@@ -99,10 +99,10 @@ function (::OutputParser)(io::IO, path)
         println(io, df)
     end
 end
-function (::OutputParser)(io::IO)
+function (parser::OutputParser)(io::IO)
     print(io, @green "Please give the absolute path to your output file: ")
     path = abspath(strip(readline(io)))
-    return OutputParser()(io, path)
+    return parser(io, path)
 end
 (parser::OutputParser)() = parser(terminal)
 
