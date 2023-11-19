@@ -14,13 +14,13 @@ using Term: @green
 
 using ..QuantumESPRESSOHelpers: YES_NO_MENU, InputBuilder, FieldSetter
 
-const EPSIL = pairs((false, true))
-const Q_IN_BAND_FORM = pairs((false, true))
-const ZASR = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
-const DOS = pairs((false, true))
-const ASR = pairs(("no", "simple", "crystal", "one-dim", "zero-dim"))
-const Q_IN_CRYST_COORD = pairs((false, true))
-const NOSYM = pairs((false, true))
+const EPSIL = Base.vect(false, true)
+const Q_IN_BAND_FORM = Base.vect(false, true)
+const ZASR = Base.vect("no", "simple", "crystal", "one-dim", "zero-dim")
+const DOS = Base.vect(false, true)
+const ASR = Base.vect("no", "simple", "crystal", "one-dim", "zero-dim")
+const Q_IN_CRYST_COORD = Base.vect(false, true)
+const NOSYM = Base.vect(false, true)
 
 function (::InputBuilder)(io::IO, ::Type{PhNamelist})
     print(
