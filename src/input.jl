@@ -1,32 +1,35 @@
 using AbInitioSoftwareBase: Namelist
 using Accessors: PropertyLens, set
-using REPL.TerminalMenus: RadioMenu, request, terminal
+using REPL.TerminalMenus: request, terminal
 using Term: @green, @red
 
-export build
+export InputBuilder, build
 
-function build end
+struct InputBuilder <: Helper end
+
+(builder::InputBuilder)(nml::Type{<:Namelist}) = builder(terminal, typeof(nml))
+
+const build = InputBuilder()
+
+struct FieldSetter <: Helper end
+
+(setter::FieldSetter)(nml::Type{<:Namelist}) = setter(terminal, typeof(nml))
 
 # This is a helper function and should not be exported.
-function help_set(term, nml::Namelist)
+function (setter::FieldSetter)(term::IO, nml::Namelist)
     while true
-        user_response = request(
-            term,
-            @green("Want to change/add any field?"),
-            RadioMenu(Base.vect("yes", "no"); charset=:ascii),
-        )
+        user_response = request(term, @green("Want to change/add any field?"), YES_NO_MENU)
         println(term, @green "I'll print the result for you:")
         println(term, @green string(nml))
         if Bool(only(user_response) - 1)
             break  # Break the loop if user chooses 'no'
         end
-        nml = _help_set_iter(term, nml)
+        nml = _set(term, nml)
     end
     return nml
 end
-help_set(nml) = help_set(terminal, nml)
 
-function _help_set_iter(term, nml::Namelist)
+function _set(term, nml::Namelist)
     fields = string.(fieldnames(typeof(nml)))
     try
         println(term, @green "Allowed fields: $fields")
