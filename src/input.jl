@@ -24,12 +24,12 @@ function (setter::FieldSetter)(io::IO, nml::Namelist)
         if Bool(only(user_response) - 1)
             break  # Break the loop if user chooses 'no'
         end
-        nml = _set(io, nml)
+        nml = _setfield(io, nml)
     end
     return nml
 end
 
-function _set(io, nml)
+function _setfield(io, nml)
     fields = fieldnames(typeof(nml))
     try
         println(io, @green "Allowed fields: ")
