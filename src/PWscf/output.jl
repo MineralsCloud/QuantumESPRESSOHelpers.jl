@@ -12,7 +12,7 @@ using Term: @blue
 
 using ..QuantumESPRESSOHelpers: YES_NO_MENU, QuantumESPRESSOHelper
 
-export parse_output
+export OutputParser, parse_output
 
 const FINAL_ALL_MENU = RadioMenu(Base.vect("final", "all"); charset=:ascii)
 
