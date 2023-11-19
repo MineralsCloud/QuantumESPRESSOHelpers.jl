@@ -10,13 +10,13 @@ using QuantumESPRESSOParser.PWscf:
     eachdiagonalization
 using Term: @blue
 
-using ..QuantumESPRESSOHelpers: YES_NO_MENU, QuantumESPRESSOHelper
+using ..QuantumESPRESSOHelpers: YES_NO_MENU, Helper
 
 export OutputParser, parse_output
 
 const FINAL_ALL_MENU = RadioMenu(Base.vect("final", "all"); charset=:ascii)
 
-struct OutputParser <: QuantumESPRESSOHelper end
+struct OutputParser <: Helper end
 
 function (::OutputParser)(io::IO)
     print(io, @green "Please give the absolute path to your output file: ")
