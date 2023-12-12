@@ -7,7 +7,7 @@ export InputBuilder, build
 
 struct InputBuilder <: Helper end
 
-(builder::InputBuilder)(::Type{T}) where {T<:Namelist} = builder(terminal, T)
+(builder::InputBuilder)(::Type{T}) where {T} = builder(terminal, T)
 
 const build = InputBuilder()
 
