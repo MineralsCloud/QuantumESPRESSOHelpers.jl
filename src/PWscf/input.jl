@@ -1,5 +1,6 @@
 using AbInitioSoftwareBase: groupname
-using CrystallographyBase: MonkhorstPackGrid
+using AtomsIO: load_system
+using CrystallographyBase: MonkhorstPackGrid, Lattice, Cell
 using QuantumESPRESSOBase.PWscf:
     ControlNamelist,
     SystemNamelist,
@@ -127,6 +128,22 @@ function (::InputBuilder)(io::IO, ::Type{CellNamelist})
     press_conv_thr = parse(Float64, readline(io))
     cell = CellNamelist(; cell_dynamics, press, wmass, press_conv_thr)
     return FieldSetter()(io, cell)
+end
+function (::InputBuilder)(io::IO, ::Type{CellParametersCard})
+    println(io, @green "Where is your cell structure file?")
+    path = readline(io)
+    system = load_system(path)
+    println(io, @green "File loaded successfully!")
+    cell = Cell(system)
+    return CellParametersCard(cell)
+end
+function (::InputBuilder)(io::IO, ::Type{AtomicPositionsCard})
+    println(io, @green "Where is your cell structure file?")
+    path = readline(io)
+    system = load_system(path)
+    println(io, @green "File loaded successfully!")
+    cell = Cell(system)
+    return AtomicPositionsCard(cell)
 end
 function (::InputBuilder)(io::IO, ::Type{KPointsCard})
     kpt_style = request(
