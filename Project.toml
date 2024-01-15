@@ -19,6 +19,7 @@ Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 [compat]
 AbInitioSoftwareBase = "0.10"
 Accessors = "0.1"
+AtomsIO = "0.2"
 CrystallographyBase = "0.14"
 DataFrames = "1"
 Pseudopotentials = "0.8"
